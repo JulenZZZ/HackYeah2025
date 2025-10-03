@@ -2,12 +2,27 @@
   "name": "hackyeah2025",
   "version": "0.0.0",
   "description": "The MVP project for the 2025 edition of HackYeah hackathon - Team 404 Found",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky",
+    "start:frontend": "npm run start --workspace=packages/frontend",
+    "start:backend": "dotnet run --project packages/backend/anything.csproj",
+    "start:all": "npm-run-all --parallel start:frontend start:backend",
+    "format:web:check": "prettier --check \"**/*.{ts,js,html,json,md,css,scss}\"",
+    "format:web:fix": "prettier --write \"**/*.{ts,js,html,json,md,css,scss}\"",
+    "format:dotnet:check": "dotnet format \"packages/backend/\" --check --verbosity quiet",
+    "format:dotnet:fix": "dotnet format \"packages/backend/\"",
+    "format:check": "npm-run-all --parallel format:web:check format:dotnet:check",
+    "format:fix": "npm-run-all --parallel format:web:fix format:dotnet:fix"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ArkadiuszPabian/HackYeah2025.git"
   },
-  "author": { "name": "404 Found Team", "email": "404found.hackyeah2025@gmail.com", "url": "https://github.com/ArkadiuszPabian/HackYeah2025.git" },
+  "author": {
+    "name": "404 Found Team",
+    "email": "404found.hackyeah2025@gmail.com",
+    "url": "https://github.com/ArkadiuszPabian/HackYeah2025.git"
+  },
   "contributors": [
     {
       "name": "Mateusz",
@@ -50,5 +65,22 @@
     "packages/frontend"
   ],
   "license": "MIT",
-  "private": true
+  "private": true,
+  "lint-staged": {
+    "packages/frontend/**/*.{ts,js,html,css,scss,json,md}": [
+      "prettier --write"
+    ],
+    "*.{js,json,md}": [
+      "prettier --write"
+    ],
+    "packages/backend/**/*.cs": [
+      "dotnet format --include \"packages/backend/**/*.cs\""
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.6.2"
+  }
 }
