@@ -1,63 +1,99 @@
+# TwojaAplikacja/models.py
+
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
-# Model scenariusza, np. "Bogata emerytura" czy "Pod górkę" [cite: 18]
-class GameScenario(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name="Nazwa scenariusza")
-    description = models.TextField(verbose_name="Opis")
-    initial_age = models.PositiveSmallIntegerField(default=18, verbose_name="Wiek początkowy")
-    initial_cash = models.DecimalField(max_digits=12, decimal_places=2, default=5000.00, verbose_name="Początkowa gotówka")
 
-    def __str__(self):
-        return self.name
+class Attribute(models.Model):
+  """Model definiujący dostępne atrybuty postaci, np. wiedza, zdrowie."""
+  name = models.CharField(max_length=100, unique=True,
+                          verbose_name="Nazwa atrybutu")
 
-# Model definiujący poziomy edukacji [cite: 97]
-class EducationLevel(models.Model):
-    level_name = models.CharField(max_length=100, verbose_name="Nazwa poziomu edukacji")
-    duration_years = models.PositiveSmallIntegerField(verbose_name="Czas trwania (w latach)")
-    cost = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Koszt całkowity")
+  def __str__(self):
+    return self.name
 
-    def __str__(self):
-        return self.level_name
+class LifeStage(models.Model):
+  """Model reprezentujący etap życia w grze, np. Młodość."""
+  name = models.CharField(max_length=100, verbose_name="Nazwa etapu")
+  order = models.PositiveIntegerField(unique=True,
+                                      help_text="Kolejność wyświetlania etapów w grze.")
 
-# Model definiujący dostępne zawody i ich parametry [cite: 90]
-class Job(models.Model):
-    job_title = models.CharField(max_length=100, verbose_name="Nazwa stanowiska")
-    industry = models.CharField(max_length=100, blank=True, null=True, verbose_name="Branża")
-    required_education = models.ForeignKey(EducationLevel, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Wymagana edukacja")
-    required_experience_years = models.PositiveSmallIntegerField(default=0, verbose_name="Wymagane lata doświadczenia")
-    gross_annual_salary = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Roczne zarobki brutto")
-    stress_impact = models.SmallIntegerField(default=0, verbose_name="Wpływ na szczęście")
-    health_impact = models.SmallIntegerField(default=0, verbose_name="Wpływ na zdrowie")
+  class Meta:
+    ordering = ['order']
 
-    def __str__(self):
-        return self.job_title
+  def __str__(self):
+    return self.name
 
-# Model definiujący pasje i hobby [cite: 114]
-class Hobby(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Nazwa hobby")
-    annual_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Roczny koszt")
-    happiness_bonus = models.SmallIntegerField(default=0, verbose_name="Bonus do szczęścia")
-    health_bonus = models.SmallIntegerField(default=0, verbose_name="Bonus do zdrowia")
 
-    def __str__(self):
-        return self.name
+class Question(models.Model):
+  """Model dla pytania, które jest zadawane graczowi."""
+  life_stage = models.ForeignKey(LifeStage, on_delete=models.CASCADE,
+                                 related_name='questions',
+                                 verbose_name="Etap życia")
+  text = models.TextField(verbose_name="Treść pytania")
+  order = models.PositiveIntegerField(
+    help_text="Kolejność pytania w ramach danego etapu życia.")
 
-# Model zdarzeń losowych (ryzyka życiowe) [cite: 139]
-class Event(models.Model):
-    class EventType(models.TextChoices):
-        HEALTH = 'HEALTH', 'Zdrowotne'
-        FINANCIAL = 'FINANCIAL', 'Finansowe'
-        FAMILY = 'FAMILY', 'Rodzinne'
-        CAREER = 'CAREER', 'Zawodowe'
-        OPPORTUNITY = 'OPPORTUNITY', 'Okazja'
+  class Meta:
+    ordering = ['life_stage', 'order']
 
-    name = models.CharField(max_length=150, verbose_name="Nazwa zdarzenia")
-    description = models.TextField(verbose_name="Opis")
-    event_type = models.CharField(max_length=20, choices=EventType.choices, verbose_name="Typ zdarzenia")
-    health_effect = models.SmallIntegerField(default=0, verbose_name="Efekt na zdrowie")
-    happiness_effect = models.SmallIntegerField(default=0, verbose_name="Efekt na szczęście")
-    financial_effect = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Efekt finansowy")
+  def __str__(self):
+    return f"({self.life_stage.name}) {self.text}"
 
-    def __str__(self):
-        return f"{self.get_event_type_display()}: {self.name}"
+
+class Answer(models.Model):
+  """Model dla możliwej odpowiedzi na pytanie."""
+  question = models.ForeignKey(Question, on_delete=models.CASCADE,
+                               related_name='answers', verbose_name="Pytanie")
+  text = models.CharField(max_length=255, verbose_name="Treść odpowiedzi")
+
+  def __str__(self):
+    return self.text
+
+
+class Condition(models.Model):
+  """Model warunku, który musi być spełniony, aby pytanie lub odpowiedź były dostępne."""
+  OPERATOR_CHOICES = [
+    ('>=', 'Większy lub równy'),
+    ('<=', 'Mniejszy lub równy'),
+    ('>', 'Większy'),
+    ('<', 'Mniejszy'),
+    ('==', 'Równy'),
+  ]
+
+  # Warunek może być przypisany do pytania (aby je wyświetlić) lub do odpowiedzi (aby była klikalna)
+  question = models.ForeignKey(Question, on_delete=models.CASCADE,
+                               related_name='conditions', null=True, blank=True)
+  answer = models.ForeignKey(Answer, on_delete=models.CASCADE,
+                             related_name='conditions', null=True, blank=True)
+
+  attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE,
+                                verbose_name="Atrybut do sprawdzenia")
+  operator = models.CharField(max_length=2, choices=OPERATOR_CHOICES,
+                              verbose_name="Operator porównania")
+  value = models.IntegerField(verbose_name="Wartość do porównania")
+
+  def __str__(self):
+    target = self.question if self.question else self.answer
+    return f"Warunek dla '{target}': {self.attribute.name} {self.operator} {self.value}"
+
+
+class Impact(models.Model):
+  """Model definiujący wpływ odpowiedzi na atrybuty postaci."""
+  OPERATION_CHOICES = [
+    ('+', 'Dodaj do wartości'),
+    ('-', 'Odejmij od wartości'),
+    ('*%', 'Modyfikuj procentowo'),
+  ]
+
+  answer = models.ForeignKey(Answer, on_delete=models.CASCADE,
+                             related_name='impacts', verbose_name="Odpowiedź")
+  attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE,
+                                verbose_name="Atrybut do zmiany")
+  operation = models.CharField(max_length=2, choices=OPERATION_CHOICES,
+                               verbose_name="Operacja")
+  value = models.IntegerField(
+    verbose_name="Wartość zmiany (dla % podaj np. -10 dla -10%)")
+
+  def __str__(self):
+    return f"Wpływ: {self.attribute.name} {self.operation} {self.value}"

@@ -1,23 +1,22 @@
 from rest_framework import viewsets
-from .models import GameScenario, EducationLevel, Job, Hobby, Event
-from .serializers import GameScenarioSerializer, EducationLevelSerializer, JobSerializer, HobbySerializer, EventSerializer
+from .models import LifeStage
+from .serializers import LifeStageSerializer
 
-class GameScenarioViewSet(viewsets.ModelViewSet):
-    queryset = GameScenario.objects.all()
-    serializer_class = GameScenarioSerializer
 
-class EducationLevelViewSet(viewsets.ModelViewSet):
-    queryset = EducationLevel.objects.all()
-    serializer_class = EducationLevelSerializer
+class GameRulesViewSet(viewsets.ReadOnlyModelViewSet):
+  """
+  ViewSet, który udostępnia całą strukturę gry (Etapy -> Pytania -> Odpowiedzi).
+  Jest zoptymalizowany pod kątem minimalizacji zapytań do bazy danych.
+  """
+  serializer_class = LifeStageSerializer
 
-class JobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
-    serializer_class = JobSerializer
-
-class HobbyViewSet(viewsets.ModelViewSet):
-    queryset = Hobby.objects.all()
-    serializer_class = HobbySerializer
-
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+  def get_queryset(self):
+    """
+    Pobiera wszystkie etapy życia i z wyprzedzeniem ładuje powiązane obiekty,
+    aby uniknąć wielokrotnych zapytań do bazy danych (problem N+1).
+    """
+    return LifeStage.objects.prefetch_related(
+      'questions__conditions__attribute',
+      'questions__answers__conditions__attribute',
+      'questions__answers__impacts__attribute'
+    ).all()
