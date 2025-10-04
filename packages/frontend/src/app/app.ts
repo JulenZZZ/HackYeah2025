@@ -1,9 +1,9 @@
 import { Component } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { GameModeSelect } from './features/game-mode-select/game-mode-select'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [GameModeSelect],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
