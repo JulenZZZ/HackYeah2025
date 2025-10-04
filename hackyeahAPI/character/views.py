@@ -1,10 +1,9 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import CharacterAsset, CharacterHistory, FamilyMember, EventLog
 from .serializers import CharacterAssetSerializer, CharacterHistorySerializer, FamilyMemberSerializer, EventLogSerializer
 
 # Wspólna klasa bazowa do filtrowania querysetów
 class BaseCharacterViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         """

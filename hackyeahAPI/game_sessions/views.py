@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import GameSession, CharacterState
 from .serializers import GameSessionSerializer, CharacterStateSerializer
 
@@ -8,7 +8,7 @@ class GameSessionViewSet(viewsets.ModelViewSet):
     Zwraca tylko obiekty należące do aktualnie zalogowanego użytkownika.
     """
     serializer_class = GameSessionSerializer
-    permission_classes = [permissions.IsAuthenticated] # Tylko zalogowani użytkownicy mają dostęp
+    
 
     def get_queryset(self):
         # Filtruj sesje gier, aby zwrócić tylko te należące do bieżącego użytkownika
@@ -19,7 +19,7 @@ class CharacterStateViewSet(viewsets.ModelViewSet):
     API endpoint do zarządzania stanem postaci.
     """
     serializer_class = CharacterStateSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    
 
     def get_queryset(self):
         # Filtruj stany postaci, aby pasowały do sesji gier bieżącego użytkownika
