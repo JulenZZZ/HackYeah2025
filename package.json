@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky",
     "start:frontend": "npm run start --workspace=packages/frontend",
-    "start:backend": "dotnet run --project packages/backend/anything.csproj",
+    "start:backend": "dotnet run --project packages/backend/HackYeah2025Api.csproj",
     "start:all": "npm-run-all --parallel start:frontend start:backend",
     "format:web:check": "prettier --check \"**/*.{ts,js,html,json,md,css,scss}\"",
     "format:web:fix": "prettier --write \"**/*.{ts,js,html,json,md,css,scss}\"",
