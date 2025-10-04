@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --configuration=pl",
+    "build": "ng build --localize",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --fix --no-interactive",
-    "format": "prettier --write \"**/*.{js,ts,html,css,scss,json,md}\""
+    "format": "prettier --write \"**/*.{js,ts,html,css,scss,json,md}\"",
+    "lang:ext": "ng extract-i18n --output-path src/locale"
   },
   "private": true,
   "dependencies": {
@@ -27,6 +28,7 @@
     "@angular/build": "^20.0.0",
     "@angular/cli": "^20.0.0",
     "@angular/compiler-cli": "^20.0.0",
+    "@angular/localize": "^20.3.3",
     "@eslint/js": "^9.35.0",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "20.3.0",
