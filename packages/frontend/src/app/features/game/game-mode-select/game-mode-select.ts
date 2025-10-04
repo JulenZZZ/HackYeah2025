@@ -2,6 +2,7 @@ import { NgFor } from '@angular/common'
 import { Component, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { GameMode } from '../../../models/game-mode.enum'
+import { NavigationState } from '../../../models/navigation.enum'
 
 @Component({
   selector: 'app-game-mode-select',
@@ -32,5 +33,9 @@ export class GameModeSelect {
     const modeAsUrlParam = mode.toLowerCase()
 
     this._router.navigate(['games', modeAsUrlParam])
+  }
+
+  goBack() {
+    return this._router.navigate([NavigationState.SelectCharacter])
   }
 }
