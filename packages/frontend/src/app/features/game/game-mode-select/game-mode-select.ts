@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { GameMode } from '../../../models/game-mode.enum'
 import { NavigationState } from '../../../models/navigation.enum'
+import { GameStateService } from '../../../services/game-state'
 
 @Component({
   selector: 'app-game-mode-select',
@@ -12,27 +13,22 @@ import { NavigationState } from '../../../models/navigation.enum'
 })
 export class GameModeSelect {
   private readonly _router = inject(Router)
+  private readonly _gameState = inject(GameStateService)
 
-  constructor() {
-    this.getSupportedModes()
+  goToChallengeSelection() {
+    return this._router.navigate([NavigationState.GameChallenge])
   }
 
-  public get modes(): string[] {
-    return this.getSupportedModes()
+  goToSandboxMode() {
+    this._gameState.setGameMode(GameMode.Sandbox)
+
+    return this._router.navigate([NavigationState.GameScreen])
   }
 
-  getSupportedModes(): string[] {
-    const values = Object.values(GameMode).filter(
-      (val) => typeof val !== 'number'
-    )
+  goToEducationMode() {
+    this._gameState.setGameMode(GameMode.Educational)
 
-    return values
-  }
-
-  clickOnModeToSelect(mode: string): void {
-    const modeAsUrlParam = mode.toLowerCase()
-
-    this._router.navigate(['games', modeAsUrlParam])
+    return this._router.navigate([NavigationState.GameScreen])
   }
 
   goBack() {

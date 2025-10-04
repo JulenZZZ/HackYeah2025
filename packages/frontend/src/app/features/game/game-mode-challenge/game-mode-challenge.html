@@ -1,3 +1,8 @@
 <button (click)="goBack()">Wróć</button>
 
-<p>game-mode-challenge works!</p>
+<button
+  *ngFor="let challenge of challenges"
+  (click)="selectChallenge(challenge)"
+>
+  {{ challenge }}
+</button>

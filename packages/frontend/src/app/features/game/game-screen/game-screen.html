@@ -1,0 +1,90 @@
+<h1>Rozdziały życia</h1>
+
+<button (click)="goToSummary()">Podsumowanie</button>
+
+<div class="life-chapters">
+  <div class="chapter youth"></div>
+
+  <div class="chapter young-adult"></div>
+
+  <div class="chapter adult"></div>
+
+  <div class="chapter old-adult"></div>
+
+  <div class="chapter retired"></div>
+</div>
+
+<main>
+  <img [src]="charImg" alt="Postać" />
+
+  <article>
+    <p>Pytanie</p>
+
+    <div class="answer-container">
+      <div class="answer-box"></div>
+
+      <div class="answer-box"></div>
+
+      <div class="answer-box"></div>
+
+      <div class="answer-box"></div>
+    </div>
+  </article>
+
+  <aside>
+    <div class="stats">
+      <h2>Zdrowie</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Oszczędności</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Spełnienie</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Wiedza</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Ryzyko / stres</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Społeczeństwo</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+
+    <div class="money-summary">
+      <p>Dochód: {{ income }}</p>
+      <p>Rodzaj umowy: {{ contract }}</p>
+
+      <h2>Po kosztach:</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+
+      <h2>Suma oszczędności emerytalnych: {{ retirementMonthlySum }}</h2>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </aside>
+</main>

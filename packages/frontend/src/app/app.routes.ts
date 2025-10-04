@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router'
+import { GameSummary } from './features/game-summary/game-summary'
 import { GameModeChallenge } from './features/game/game-mode-challenge/game-mode-challenge'
-import { GameModeEducational } from './features/game/game-mode-educational/game-mode-educational'
-import { GameModeSandbox } from './features/game/game-mode-sandbox/game-mode-sandbox'
 import { GameModeSelect } from './features/game/game-mode-select/game-mode-select'
+import { GameScreen } from './features/game/game-screen/game-screen'
 import { SelectCharacter } from './features/select-character/select-character'
 import { StartMenu } from './features/start-menu/start-menu'
 import { NavigationState } from './models/navigation.enum'
@@ -21,16 +21,16 @@ export const routes: Routes = [
     component: GameModeSelect,
   },
   {
-    path: NavigationState.GameSandbox,
-    component: GameModeSandbox,
-  },
-  {
     path: NavigationState.GameChallenge,
     component: GameModeChallenge,
   },
   {
-    path: NavigationState.GameEducational,
-    component: GameModeEducational,
+    path: NavigationState.GameScreen,
+    component: GameScreen,
+  },
+  {
+    path: NavigationState.GameSummary,
+    component: GameSummary,
   },
   {
     path: '**',

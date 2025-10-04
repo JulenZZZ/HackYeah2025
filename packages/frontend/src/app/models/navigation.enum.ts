@@ -5,9 +5,9 @@ export enum NavigationState {
 
   SelectGame = 'select-game',
 
-  GameSandbox = 'games/sandbox',
+  GameChallenge = 'select-challenge',
 
-  GameChallenge = 'games/challenge',
+  GameScreen = 'game-screen',
 
-  GameEducational = 'games/educational',
+  GameSummary = 'game-summary',
 }
