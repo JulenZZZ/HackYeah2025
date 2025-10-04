@@ -13,6 +13,16 @@ export class GameStateService {
   private _challengeCategory: ChallengeCategory | undefined
   private _stageOfLife: StageOfLife | undefined
 
+  public statHealth = 50
+  public statSavings = 0
+  public statFulfillment = 0
+  public statKnowledge = 0
+  public statStress = 0 //999999
+  public statSociety = 0
+
+  public currIncome = 6000
+  public contract: 'UoP' | 'B2B' | undefined
+
   get charSex(): Sex | undefined {
     return this._charSex
   }
