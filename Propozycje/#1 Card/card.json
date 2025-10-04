@@ -1,0 +1,27 @@
+{
+  "Id": "card_001",
+  "Title": "Wziąłem żonę",
+  "Description": "Masz dziś dwie możliwości:",
+  "Mode": "adult",
+  "Options": [
+    {
+      "Id": "opt1",
+      "Text": "Spędzić czas z żoną",
+      "Effects": [
+        {"Stat": "happiness", "Delta": 10},
+        {"Stat": "money", "Delta": -20}
+      ],
+      "RiskLevel": 0
+    },
+    {
+      "Id": "opt2",
+      "Text": "Zostać na nadgodziny",
+      "Effects": [
+        {"Stat": "money", "Delta": 200},
+        {"Stat": "stress", "Delta": 15},
+        {"Stat": "happiness", "Delta": -8}
+      ],
+      "RiskLevel": 2
+    }
+  ]
+}
