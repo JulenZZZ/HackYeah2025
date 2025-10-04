@@ -1,0 +1,9 @@
+django
+djangorestframework
+psycopg2-binary
+daphne
+pandas
+numpy
+whitenoise
+django-environ
+gunicorn
