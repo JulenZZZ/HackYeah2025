@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'game_rules',
-    'character',
-    'game_sessions'
 ]
 
 STATIC_URL = 'static/'

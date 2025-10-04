@@ -1,27 +1,50 @@
 from rest_framework import serializers
-from .models import GameScenario, EducationLevel, Job, Hobby, Event
+from .models import Attribute, LifeStage, Question, Answer, Condition, Impact
 
-class GameScenarioSerializer(serializers.ModelSerializer):
+class AttributeSerializer(serializers.ModelSerializer):
+    """Prosty serializator do wyświetlania nazwy atrybutu."""
     class Meta:
-        model = GameScenario
-        fields = '__all__'
+        model = Attribute
+        fields = ['name']
 
-class EducationLevelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EducationLevel
-        fields = '__all__'
+class ImpactSerializer(serializers.ModelSerializer):
+    """Serializator dla wpływu odpowiedzi na atrybuty."""
+    attribute = serializers.StringRelatedField() # Wyświetli nazwę atrybutu zamiast ID
 
-class JobSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Job
-        fields = '__all__'
+        model = Impact
+        fields = ['attribute', 'operation', 'value']
 
-class HobbySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Hobby
-        fields = '__all__'
+class ConditionSerializer(serializers.ModelSerializer):
+    """Serializator dla warunków widoczności pytania/odpowiedzi."""
+    attribute = serializers.StringRelatedField() # Wyświetli nazwę atrybutu zamiast ID
 
-class EventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Event
-        fields = '__all__'
+        model = Condition
+        fields = ['attribute', 'operator', 'value']
+
+class AnswerSerializer(serializers.ModelSerializer):
+    """Serializator dla odpowiedzi, zawiera zagnieżdżone warunki i wpływy."""
+    conditions = ConditionSerializer(many=True, read_only=True)
+    impacts = ImpactSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Answer
+        fields = ['id', 'text', 'conditions', 'impacts']
+
+class QuestionSerializer(serializers.ModelSerializer):
+    """Serializator dla pytania, zawiera zagnieżdżone warunki i odpowiedzi."""
+    conditions = ConditionSerializer(many=True, read_only=True)
+    answers = AnswerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Question
+        fields = ['id', 'text', 'order', 'conditions', 'answers']
+
+class LifeStageSerializer(serializers.ModelSerializer):
+    """Główny serializator, który łączy wszystko w jedną strukturę."""
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = LifeStage
+        fields = ['id', 'name', 'order', 'questions']
