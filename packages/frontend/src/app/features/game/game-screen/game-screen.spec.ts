@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { GameModeEducational } from './game-mode-educational'
+import { GameScreen } from './game-screen'
 
-describe('GameModeEducational', () => {
-  let component: GameModeEducational
-  let fixture: ComponentFixture<GameModeEducational>
+describe('GameScreen', () => {
+  let component: GameScreen
+  let fixture: ComponentFixture<GameScreen>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GameModeEducational],
+      imports: [GameScreen],
     }).compileComponents()
 
-    fixture = TestBed.createComponent(GameModeEducational)
+    fixture = TestBed.createComponent(GameScreen)
     component = fixture.componentInstance
     fixture.detectChanges()
   })

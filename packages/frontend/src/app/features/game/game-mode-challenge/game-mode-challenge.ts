@@ -37,6 +37,8 @@ export class GameModeChallenge {
     }
 
     this._gameState.setChallengeCategory(challengeValue)
+
+    return this._router.navigate([NavigationState.GameScreen])
   }
 
   goBack() {

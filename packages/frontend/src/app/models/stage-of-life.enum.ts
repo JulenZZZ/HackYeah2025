@@ -1,12 +1,11 @@
 export enum StageOfLife {
+  Youth,
 
-    Youth,
+  YoungAdult,
 
-    YoungAdult,
+  Adult,
 
-    Adult,
+  OldAdult,
 
-    Retirement,
-
-    End
+  Retired,
 }

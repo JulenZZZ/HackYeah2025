@@ -1,5 +1,7 @@
 <button (click)="goBack()">Wróć</button>
 
-<button *ngFor="let mode of modes" (click)="clickOnModeToSelect(mode)">
-  {{ mode }}
-</button>
+<button (click)="goToSandboxMode()">Swobodny</button>
+
+<button (click)="goToChallengeSelection()">Wyzwanie</button>
+
+<button (click)="goToEducationMode()">Edukacja</button>
