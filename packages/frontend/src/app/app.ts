@@ -1,12 +1,10 @@
 import { Component } from '@angular/core'
-import { GameModeSelect } from './features/game-mode-select/game-mode-select'
+import { RouterOutlet } from '@angular/router'
 
 @Component({
   selector: 'app-root',
-  imports: [GameModeSelect],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  protected title = 'frontend'
-}
+export class App {}
