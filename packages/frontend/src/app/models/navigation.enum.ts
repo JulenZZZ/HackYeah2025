@@ -8,4 +8,6 @@ export enum NavigationState {
   GameChallenge = 'select-challenge',
 
   GameScreen = 'game-screen',
+
+  GameSummary = 'game-summary',
 }

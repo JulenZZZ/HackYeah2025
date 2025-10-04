@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router'
+import { GameSummary } from './features/game-summary/game-summary'
 import { GameModeChallenge } from './features/game/game-mode-challenge/game-mode-challenge'
 import { GameModeSelect } from './features/game/game-mode-select/game-mode-select'
 import { GameScreen } from './features/game/game-screen/game-screen'
@@ -26,6 +27,10 @@ export const routes: Routes = [
   {
     path: NavigationState.GameScreen,
     component: GameScreen,
+  },
+  {
+    path: NavigationState.GameSummary,
+    component: GameSummary,
   },
   {
     path: '**',
