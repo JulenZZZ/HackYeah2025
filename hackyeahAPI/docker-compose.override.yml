@@ -1,0 +1,20 @@
+# hackyeahAPI/docker-compose.override.yml
+services:
+  django-web:
+    env_file:
+      - .env
+    container_name: django_web_dev
+    volumes:
+      # Mapowanie kodu lokalnego do kontenera dla live reload
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    environment:
+      # Nadpisuje wartości z .env
+      DEBUG: 1
+      DJANGO_LOGLEVEL: DEBUG
+    # Użyj serwera deweloperskiego Django dla live reload
+    command: python manage.py runserver 0.0.0.0:8080
+    ports:
+      # Udostępnij port na zewnątrz dla łatwego dostępu w dev
+      - "8000:8080"
