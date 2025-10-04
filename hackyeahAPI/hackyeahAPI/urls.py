@@ -18,6 +18,5 @@ router.registry.extend(character_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Teraz /api/ będzie pokazywać stronę główną ze wszystkimi endpointami
     path('api/', include(router.urls)),
 ]
