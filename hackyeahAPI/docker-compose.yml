@@ -1,0 +1,20 @@
+# hackyeahAPI/docker-compose.yml
+services:
+  django-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_web_prod
+    env_file:
+      - .env
+    ports:
+      # Port 8080 będzie dostępny dla reverse proxy (np. Nginx)
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    restart: unless-stopped
+
+volumes:
+  static_volume:
+  media_volume:
