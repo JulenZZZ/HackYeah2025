@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="appTitle" datatype="html">
+        <source>Welcome to the Angular Translation Demo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/game-mode-select/game-mode-select.html</context>
+          <context context-type="linenumber">3,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5073743199129453793" datatype="html">
+        <source> This text will be replaced with the Spanish translation.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/game-mode-select/game-mode-select.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+        <note priority="1" from="description">My app header description</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
