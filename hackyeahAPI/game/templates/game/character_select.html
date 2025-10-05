@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wybierz Postać</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+        form { display: flex; justify-content: center; gap: 20px; }
+        button { padding: 15px 30px; font-size: 1.2em; cursor: pointer; border: 2px solid #ccc; background: white; border-radius: 5px; }
+        button:hover { background: #f0f0f0; }
+        .error { color: red; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Krok 1: Wybierz swoją postać</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="character" value="Kobieta">Kobieta</button>
+        <button type="submit" name="character" value="Mężczyzna">Mężczyzna</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
