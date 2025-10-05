@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'game_rules',
+    'api',
+    'game',
 ]
 
 STATIC_URL = 'static/'
@@ -71,7 +72,7 @@ WSGI_APPLICATION = 'hackyeahAPI.wsgi.application'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # <-- ZMIANA TUTAJ
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
