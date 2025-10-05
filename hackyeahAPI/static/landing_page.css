@@ -6,7 +6,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .main-container {
@@ -16,15 +16,16 @@ body, html {
     width: 100%;
     max-width: 1200px;
     padding: 20px;
+    flex-wrap: wrap;
+    gap: 20px; /* Dodano odstęp dla lepszego układu */
 }
 
 .left-panel {
-    flex: 1;
+    flex: 1 1 300px; /* Uelastyczniono panel */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-right: 50px;
 }
 
 .family-image {
@@ -34,7 +35,7 @@ body, html {
 }
 
 .right-panel {
-    flex: 1;
+    flex: 1 1 300px; /* Uelastyczniono panel */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,4 +103,21 @@ body, html {
     color: #555;
     font-weight: 600;
     box-sizing: border-box;
+}
+
+/* --- RESPONSIVE STYLES --- */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    .left-panel {
+        padding-bottom: 30px;
+    }
+    .title-card h1 {
+        font-size: 1.5em;
+    }
+    .btn-create {
+        padding: 15px 35px;
+        font-size: 1.2em;
+    }
 }
