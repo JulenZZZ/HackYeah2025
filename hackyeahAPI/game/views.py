@@ -69,7 +69,7 @@ def summary_view(request):
         savings = final_attributes.get('oszczędności', 0) * 1000 + final_attributes.get('majątek', 0) * 500
 
         context = {
-            'life_stages': ['Młodość', 'Młody dorosły', 'Dorosłość', 'Emerytura'],
+            'life_stages': ['Młodość', 'Wczesna dorosłość', 'Dorosłość', 'Emerytura'],
             'attributes': {
                 'left': {k: attributes_with_meta[k] for k in left_keys if k in attributes_with_meta},
                 'right': {k: attributes_with_meta[k] for k in attributes_with_meta if k not in left_keys}
