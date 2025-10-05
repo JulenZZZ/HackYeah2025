@@ -38,7 +38,11 @@
                 {% endfor %}
             </div>
             <div class="end-center-image">
-                 <img src="{% static 'images/family_final.png' %}" alt="Podsumowanie życia">
+                {% if character == 'Kobieta' %}
+                    <img src="/shared/images/girl4.webp" alt="Podsumowanie życia">
+                {% else %}
+                    <img src="/shared/images/boy4.webp" alt="Podsumowanie życia">
+                {% endif %}
             </div>
             <div class="end-attributes-panel" id="end-attributes-right">
                 {% for name, attr in attributes.right.items %}

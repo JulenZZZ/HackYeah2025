@@ -69,6 +69,7 @@ def summary_view(request):
         savings = final_attributes.get('oszczędności', 0) * 1000 + final_attributes.get('majątek', 0) * 500
 
         context = {
+            'character': request.session.get('character'),
             'life_stages': ['Młodość', 'Wczesna dorosłość', 'Dorosłość', 'Emerytura'],
             'attributes': {
                 'left': {k: attributes_with_meta[k] for k in left_keys if k in attributes_with_meta},
