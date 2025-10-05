@@ -14,6 +14,13 @@
 
     <div id="summary-container-wrapper">
         <h2 class="end-title">PODSUMOWANIE</h2>
+
+        {% if challenge_result %}
+            <div class="challenge-result-{{ challenge_result.status }}">
+                {{ challenge_result.message }}
+            </div>
+        {% endif %}
+
         <div id="end-stages-bar">
             {% for stage in life_stages %}
                 <div class="stage">{{ stage }}</div>

@@ -1,4 +1,4 @@
-# TwojaAplikacja/models.py
+# hackyeahAPI/api/models.py
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -97,3 +97,23 @@ class Impact(models.Model):
 
   def __str__(self):
     return f"Wpływ: {self.attribute.name} {self.operation} {self.value}"
+
+# NOWY MODEL
+class Challenge(models.Model):
+    """Model definiujący wyzwanie."""
+    name = models.CharField(max_length=100, verbose_name="Nazwa wyzwania")
+    description = models.TextField(verbose_name="Opis wyzwania")
+    attribute_to_check = models.ForeignKey(Attribute, on_delete=models.CASCADE, verbose_name="Atrybut do sprawdzenia")
+    target_value = models.IntegerField(verbose_name="Wartość docelowa")
+
+    def __str__(self):
+        return self.name
+
+# NOWY MODEL
+class EducationalContent(models.Model):
+    """Model dla treści edukacyjnych."""
+    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='educational_content', verbose_name="Pytanie")
+    content = models.TextField(verbose_name="Treść edukacyjna")
+
+    def __str__(self):
+        return f"Treść edukacyjna dla pytania: {self.question.text[:30]}..."

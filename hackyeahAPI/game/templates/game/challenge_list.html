@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wybierz Wyzwanie</title>
+    <link rel="stylesheet" href="{% static 'challenge_select.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <div class="character-panel">
+            {% if request.session.character == 'Kobieta' %}
+                <img src="{% static 'images/woman.png' %}" alt="Wybrana postać: Kobieta" class="character-image">
+            {% else %}
+                <img src="{% static 'images/man.png' %}" alt="Wybrana postać: Mężczyzna" class="character-image">
+            {% endif %}
+        </div>
+        <div class="selection-panel">
+            <div class="title-card">WYBIERZ WYZWANIE</div>
+            <form method="post" class="challenge-form">
+                {% csrf_token %}
+                {% for challenge in challenges %}
+                    <button type="submit" name="challenge_id" value="{{ challenge.id }}">
+                        <strong>{{ challenge.name }}</strong>
+                        <p style="font-size: 0.8em; font-weight: 400; margin-top: 5px;">{{ challenge.description }}</p>
+                    </button>
+                {% empty %}
+                    <p>Brak dostępnych wyzwań. Skontaktuj się z administratorem.</p>
+                {% endfor %}
+            </form>
+             {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

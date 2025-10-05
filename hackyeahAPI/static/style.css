@@ -292,5 +292,36 @@ body, html {
 #restart-button:hover {
     background-color: #2ecc71;
 }
+/* NOWE STYLE DLA TRYBU EDUKACYJNEGO */
+.tooltip {
+    background-color: #f1c40f;
+    color: #333;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #f39c12;
+}
+
+/* NOWE STYLE DLA WYNIKU WYZWANIA */
+.challenge-result-success {
+    background-color: #2ecc71;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.challenge-result-failure {
+    background-color: #e74c3c;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
 
 .hidden { display: none; }
+
