@@ -1,42 +1,69 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gra w Życie</title>
-    <link rel="stylesheet" href="../../static/style.css">
+    <title>Wirtualne Jutro - Gra</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <div id="game-init-data" data-character="{{ character }}" data-challenge="{{ challenge }}" style="display: none;"></div>
+
     <div id="game-container">
-        <h1>Gra w Życie</h1>
+        <header id="life-stages-bar">
+            <h2>ROZDZIAŁY ŻYCIA</h2>
+            <div id="stages-container">
+                </div>
+        </header>
 
-        <div id="attributes-container">
-            <h2>Twoje Atrybuty</h2>
-            <div id="attributes"></div>
-        </div>
+        <main id="game-wrapper">
+            <section id="story-panel">
+                <div id="character-container">
+                    <img id="character-image" src="" alt="Postać gracza">
+                </div>
+                <div id="event-container">
+                    <p id="question-text"></p>
+                    <div id="answers-container">
+                        </div>
+                </div>
+            </section>
 
-        <div id="story-container">
-            <div id="character-image-container" class="character-image"></div>
-            <h2 id="stage-name"></h2>
-            <p id="question-text"></p>
-            <div id="answers-container"></div>
-        </div>
-
-        <div id="start-screen">
-            <h2>Witaj w Grze w Życie!</h2>
-            <p>Podejmuj decyzje, które ukształtują Twoje życie. Każdy wybór ma znaczenie.</p>
-            <button id="start-button">Rozpocznij Grę</button>
-        </div>
+            <aside id="sidebar">
+                <div id="attributes-container">
+                    </div>
+                <div id="summary-container">
+                    </div>
+            </aside>
+        </main>
 
         <div id="end-screen" class="hidden">
-            <h2>Koniec Gry!</h2>
-            <div id="end-game-image-container"></div>
-            <p>Tak wygląda podsumowanie Twojego życia. Czy jesteś z niego zadowolony?</p>
-            <div id="final-attributes"></div>
-            <button id="restart-button">Zagraj Ponownie</button>
+            <h2 class="end-title">PODSUMOWANIE</h2>
+            <div id="end-stages-bar">
+                </div>
+            <div class="end-main-content">
+                <div class="end-attributes-panel" id="end-attributes-left">
+                    </div>
+                <div class="end-center-image">
+                     <img src="{% static 'images/family_final.png' %}" alt="Podsumowanie życia">
+                </div>
+                <div class="end-attributes-panel" id="end-attributes-right">
+                    </div>
+            </div>
+            <div class="end-footer">
+                <div class="end-summary-box" id="end-summary-left">
+                    </div>
+                <div class="end-summary-box" id="end-summary-right">
+                    </div>
+            </div>
+             <a href="{% url 'landing_page' %}" id="restart-button">Zagraj Ponownie</a>
         </div>
-
     </div>
-    <script src="../../static/script.js"></script>
+
+    <script src="{% static 'script.js' %}"></script>
 </body>
 </html>

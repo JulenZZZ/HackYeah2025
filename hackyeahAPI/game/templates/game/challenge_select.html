@@ -1,28 +1,36 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Wybierz Wyzwanie</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 100px; }
-        form { display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        button { padding: 15px 30px; font-size: 1.2em; cursor: pointer; border: 2px solid #ccc; background: white; border-radius: 5px; width: 250px; }
-        button:hover { background: #f0f0f0; }
-        .error { color: red; margin-top: 20px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wybierz Tryb Gry</title>
+    <link rel="stylesheet" href="{% static 'challenge_select.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Krok 2: Wybierz wyzwanie</h1>
-    <p>Wybrana postać: <strong>{{ request.session.character }}</strong></p>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="challenge" value="Szybka misja">Szybka misja</button>
-        <button type="submit" name="challenge" value="Długa kampania">Długa kampania</button>
-    </form>
-
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
+    <div class="main-container">
+        <div class="character-panel">
+            {% if request.session.character == 'Kobieta' %}
+                <img src="{% static 'images/woman.png' %}" alt="Wybrana postać: Kobieta" class="character-image">
+            {% else %}
+                <img src="{% static 'images/man.png' %}" alt="Wybrana postać: Mężczyzna" class="character-image">
+            {% endif %}
+        </div>
+        <div class="selection-panel">
+            <div class="title-card">WYBIERZ TRYB</div>
+            <form method="post" class="challenge-form">
+                {% csrf_token %}
+                <button type="submit" name="challenge" value="Swobodny">Swobodny – opis</button>
+                <button type="submit" name="challenge" value="Wyzwanie">WYZWANIE – opis</button>
+                <button type="submit" name="challenge" value="Edukacja">EDUKACJA – opis</button>
+            </form>
+             {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

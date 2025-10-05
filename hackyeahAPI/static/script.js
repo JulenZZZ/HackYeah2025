@@ -2,111 +2,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- STAN GRY ---
     let gameState = {};
-    let gameData = []; // Pusta tablica na dane z API
+    let gameData = [];
+    let character = 'Kobieta';
+    let challenge = 'Swobodny';
 
     // --- ELEMENTY DOM ---
-    const attributesDiv = document.getElementById('attributes');
-    const stageNameH2 = document.getElementById('stage-name');
+    const gameContainer = document.getElementById('game-container');
+    const stagesContainer = document.getElementById('stages-container');
     const questionTextP = document.getElementById('question-text');
     const answersContainer = document.getElementById('answers-container');
-    const startScreen = document.getElementById('start-screen');
-    const endScreen = document.getElementById('end-screen');
-    const storyContainer = document.getElementById('story-container');
+    const characterImage = document.getElementById('character-image');
     const attributesContainer = document.getElementById('attributes-container');
-    const startButton = document.getElementById('start-button');
-    const restartButton = document.getElementById('restart-button');
-    const finalAttributesDiv = document.getElementById('final-attributes');
-    const characterImageContainer = document.getElementById('character-image-container');
-    const endGameImageContainer = document.getElementById('end-game-image-container');
+    const summaryContainer = document.getElementById('summary-container');
+    const endScreen = document.getElementById('end-screen');
+    const gameWrapper = document.getElementById('game-wrapper');
 
-    // --- POBIERANIE DANYCH ---
+    const attributeColors = {
+        'Zdrowie': '#2ecc71',
+        'Oszczędności': '#f1c40f',
+        'Spełnienie': '#3498db',
+        'Wiedza': '#9b59b6',
+        'Ryzyko/Stres': '#e74c3c',
+        'społeczeństwo': '#e67e22',
+    };
+
     const fetchGameData = async () => {
         try {
             const response = await fetch('/api/game-rules/');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             gameData = await response.json();
-            initGame(); // Rozpocznij grę po pobraniu danych
+            initGame();
         } catch (error) {
             console.error("Nie udało się pobrać danych gry:", error);
-            storyContainer.innerHTML = `<p style="color: red;">Wystąpił błąd podczas ładowania gry. Spróbuj odświeżyć stronę.</p>`;
+            gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania gry. Spróbuj odświeżyć stronę.</p>`;
         }
     };
-
-
-    // --- FUNKCJE POMOCNICZE ---
-    const checkCondition = (condition) => {
-        const attributeValue = gameState.playerAttributes[condition.attribute] || 0;
-        switch (condition.operator) {
-            case '>=': return attributeValue >= condition.value;
-            case '<=': return attributeValue <= condition.value;
-            case '>':  return attributeValue > condition.value;
-            case '<':  return attributeValue < condition.value;
-            case '==': return attributeValue == condition.value;
-            default: return true;
-        }
-    };
-
-    const applyImpacts = (impacts) => {
-        impacts.forEach(impact => {
-            const oldValue = gameState.playerAttributes[impact.attribute] || 0;
-            switch (impact.operation) {
-                case '+':
-                    gameState.playerAttributes[impact.attribute] = oldValue + impact.value;
-                    break;
-                case '-':
-                    gameState.playerAttributes[impact.attribute] = oldValue - impact.value;
-                    break;
-                case '*%':
-                    gameState.playerAttributes[impact.attribute] = Math.round(oldValue * (1 + impact.value / 100));
-                    break;
-            }
-        });
-    };
-
-    // --- GŁÓWNA LOGIKA GRY ---
 
     const initGame = () => {
         gameState = {
             playerAttributes: {
-                'wiedza': 0,
-                'zdrowie': 50,
-                'spełnienie': 0,
-                'majątek': 100,
-                'umiejętności społeczne': 0,
-                'doświadczenie zawodowe': 0,
-                'ryzyko': 0,
+                'Zdrowie': 80,
+                'Oszczędności': 20,
+                'Spełnienie': 50,
+                'Wiedza': 10,
+                'Ryzyko/Stres': 10,
+                'społeczeństwo': 30,
             },
             currentStageIndex: 0,
             currentQuestionIndex: 0,
         };
-        startScreen.classList.add('hidden');
         endScreen.classList.add('hidden');
-        storyContainer.classList.remove('hidden');
-        attributesContainer.classList.remove('hidden');
+        gameWrapper.classList.remove('hidden');
+        buildStagesBar();
+        updateSidebar();
         displayCurrentQuestion();
-        updateAttributesDisplay();
     };
 
-    const updateAttributesDisplay = () => {
-        attributesDiv.innerHTML = '';
+    const buildStagesBar = () => {
+        stagesContainer.innerHTML = '';
+        gameData.forEach((stage, index) => {
+            const stageElement = document.createElement('div');
+            stageElement.classList.add('stage');
+            if (index === gameState.currentStageIndex) {
+                stageElement.classList.add('active');
+            }
+            stageElement.textContent = stage.name;
+            stagesContainer.appendChild(stageElement);
+        });
+    };
+
+    const updateSidebar = () => {
+        attributesContainer.innerHTML = '';
         for (const attr in gameState.playerAttributes) {
             const value = gameState.playerAttributes[attr];
             const attrElement = document.createElement('div');
             attrElement.className = 'attribute';
             attrElement.innerHTML = `
-                <div class="attribute-name">${attr.charAt(0).toUpperCase() + attr.slice(1)}</div>
+                <div class="attribute-name">${attr}</div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${value}%" data-value="${value}"></div>
-                </div>
-            `;
-            attributesDiv.appendChild(attrElement);
+                    <div class="progress-bar" style="width: ${value}%; background-color: ${attributeColors[attr] || '#bdc3c7'};"></div>
+                </div>`;
+            attributesContainer.appendChild(attrElement);
         }
+
+        summaryContainer.innerHTML = `
+            <div class="summary-item"><span>Dochód:</span> <span>brak</span></div>
+            <div class="summary-item"><span>Rodzaj umowy:</span> <span>brak</span></div>
+            <div class="summary-item"><span>Po kosztach:</span> <span>-</span></div>
+            <div class="summary-item"><span>Oszczędności emerytalne:</span> <span>210,99 zł</span></div>`;
     };
 
     const displayCurrentQuestion = () => {
-        if (gameData.length === 0) return; // Nie rób nic, jeśli dane nie są załadowane
+        if (gameData.length === 0) return;
 
         const currentStage = gameData[gameState.currentStageIndex];
         if (!currentStage) {
@@ -115,84 +102,100 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
-
-        // Pomiń pytanie, jeśli warunki nie są spełnione
-        while(currentQuestion && currentQuestion.conditions && !currentQuestion.conditions.every(checkCondition)) {
-            gameState.currentQuestionIndex++;
-            currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
-        }
-
         if (!currentQuestion) {
             gameState.currentStageIndex++;
             gameState.currentQuestionIndex = 0;
-            displayCurrentQuestion(); // Przejdź do następnego etapu
+            buildStagesBar();
+            displayCurrentQuestion();
             return;
         }
 
-        stageNameH2.textContent = currentStage.name;
         questionTextP.textContent = currentQuestion.text;
         answersContainer.innerHTML = '';
-
-        // Zaktualizuj obrazek postaci
-        let imageUrl = '';
-        if (currentStage.name === 'Młodość') {
-            imageUrl = '/mediafiles/girl1.png';
-        } else if (currentStage.name === 'Młody dorosły') {
-            imageUrl = '/mediafiles/girl2.png';
-        } else if (currentStage.name === 'Dorosły') {
-            imageUrl = '/mediafiles/girl3.png';
-        }
-
-        if (imageUrl) {
-            characterImageContainer.innerHTML = `<img src="${imageUrl}" alt="${currentStage.name}">`;
-        } else {
-            characterImageContainer.innerHTML = '';
-        }
-
+        const imageBase = character === 'Kobieta' ? 'girl' : 'boy';
+        const imageNumber = gameState.currentStageIndex + 1;
+        characterImage.src = `/mediafiles/${imageBase}${imageNumber}.png`;
 
         currentQuestion.answers.forEach(answer => {
-            const button = document.createElement('button');
-            button.textContent = answer.text;
-            button.className = 'answer-button';
-            button.disabled = answer.conditions && !answer.conditions.every(checkCondition);
-
-            button.onclick = () => {
-                if(answer.impacts) {
-                    applyImpacts(answer.impacts);
-                }
+            const card = document.createElement('button');
+            card.className = 'answer-card';
+            card.innerHTML = `<h3>${answer.text}</h3><p>${answer.description || 'Kliknij, aby wybrać tę opcję.'}</p>`;
+            card.onclick = () => {
                 gameState.currentQuestionIndex++;
-                updateAttributesDisplay();
+                updateSidebar();
                 displayCurrentQuestion();
             };
-            answersContainer.appendChild(button);
+            answersContainer.appendChild(card);
         });
     };
 
     const endGame = () => {
-        storyContainer.classList.add('hidden');
-        attributesContainer.classList.add('hidden');
+        gameWrapper.classList.add('hidden');
         endScreen.classList.remove('hidden');
 
-        // Wyświetl obrazek na koniec gry
-        endGameImageContainer.innerHTML = `<img src="/mediafiles/girl4.png" alt="Emerytura" style="max-width: 200px; border-radius: 10px; margin-bottom: 20px;">`;
+        // 1. Wypełnij pasek etapów
+        const endStagesBar = document.getElementById('end-stages-bar');
+        endStagesBar.innerHTML = '';
+        gameData.forEach(stage => {
+            const stageElement = document.createElement('div');
+            stageElement.className = 'stage';
+            stageElement.textContent = stage.name;
+            endStagesBar.appendChild(stageElement);
+        });
 
-        finalAttributesDiv.innerHTML = ''; // Wyczyść poprzednie podsumowanie
+        // 2. Wypełnij atrybuty
+        const endAttributesLeft = document.getElementById('end-attributes-left');
+        const endAttributesRight = document.getElementById('end-attributes-right');
+        endAttributesLeft.innerHTML = '';
+        endAttributesRight.innerHTML = '';
+        const leftAttrKeys = ['Zdrowie', 'Oszczędności', 'Spełnienie'];
+
         for (const attr in gameState.playerAttributes) {
             const value = gameState.playerAttributes[attr];
-            const attrElement = document.createElement('div');
-            attrElement.className = 'attribute';
-            attrElement.innerHTML = `
-                <div class="attribute-name">${attr.charAt(0).toUpperCase() + attr.slice(1)}</div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${value}%" data-value="${value}"></div>
-                </div>
-            `;
-            finalAttributesDiv.appendChild(attrElement);
+            const html = `
+                <div class="end-attribute">
+                    ${attr}
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${value}%; background-color: ${attributeColors[attr] || '#bdc3c7'};"></div>
+                    </div>
+                </div>`;
+            if (leftAttrKeys.includes(attr)) {
+                endAttributesLeft.innerHTML += html;
+            } else {
+                endAttributesRight.innerHTML += html;
+            }
         }
+
+        // 3. Wypełnij podsumowanie finansowe (obliczenia na podstawie końcowego stanu gry)
+        const endSummaryLeft = document.getElementById('end-summary-left');
+        const endSummaryRight = document.getElementById('end-summary-right');
+
+        // Przykładowe dynamiczne obliczenia na podstawie atrybutów
+        const finalIncome = (gameState.playerAttributes['Wiedza'] * 120).toLocaleString('pl-PL');
+        const afterCostsValue = (gameState.playerAttributes['Spełnienie'] + gameState.playerAttributes['Zdrowie']) / 2;
+        const finalSavings = (gameState.playerAttributes['Oszczędności'] * 10212.87).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        endSummaryLeft.innerHTML = `
+            <div>Dochód: ${finalIncome}zł</div>
+            <div>Rodzaj umowy: UOP</div>
+            <div>Po kosztach pozostało:</div>
+            <div class="summary-progress-bar-container progress-bar-container">
+                <div class="progress-bar" style="width: ${afterCostsValue}%;"></div>
+            </div>`;
+
+        endSummaryRight.innerHTML = `
+            <div>Suma oszczędności emerytalnych: ${finalSavings}zł</div>
+            <div class="summary-progress-bar-container progress-bar-container">
+                <div class="progress-bar" style="width: ${gameState.playerAttributes['Oszczędności']}%;"></div>
+            </div>`;
     };
 
-    // --- NASŁUCHIWANIE ZDARZEŃ ---
-    startButton.addEventListener('click', fetchGameData); // Zmieniono na fetchGameData
-    restartButton.addEventListener('click', initGame);
-
+    const gameInitDataEl = document.getElementById('game-init-data');
+    if (gameInitDataEl) {
+        character = gameInitDataEl.dataset.character;
+        challenge = gameInitDataEl.dataset.challenge;
+        fetchGameData();
+    } else {
+        console.error("Nie znaleziono danych inicjalizacyjnych gry.");
+    }
 });
