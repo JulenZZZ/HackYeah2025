@@ -23,9 +23,9 @@
             <div class="title-card">WYBIERZ TRYB</div>
             <form method="post" class="challenge-form">
                 {% csrf_token %}
-                <button type="submit" name="challenge" value="Swobodny">Swobodny – opis</button>
-                <button type="submit" name="challenge" value="Wyzwanie">WYZWANIE – opis</button>
-                <button type="submit" name="challenge" value="Edukacja">EDUKACJA – opis</button>
+                <button type="submit" name="challenge" value="Swobodny">SWOBODNY - opis</button>
+                <button type="submit" name="challenge" value="Wyzwanie">WYZWANIE - opis</button>
+                <button type="submit" name="challenge" value="Edukacja">EDUKACJA - opis</button>
             </form>
              {% if error %}
                 <p class="error">{{ error }}</p>
