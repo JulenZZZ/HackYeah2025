@@ -6,7 +6,9 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: auto;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .main-container {
@@ -16,6 +18,7 @@ body, html {
     width: 100%;
     max-width: 1100px;
     padding: 20px;
+    flex-wrap: wrap;
 }
 
 .character-panel {
@@ -23,6 +26,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 280px;
 }
 
 .character-image {
@@ -36,6 +40,7 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 280px;
 }
 
 .title-card {
@@ -71,6 +76,7 @@ body, html {
     text-align: center;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 100px;
 }
 
 .challenge-form button:hover {
@@ -85,4 +91,19 @@ body, html {
     padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- RESPONSIVE STYLES --- */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    .character-image {
+        max-height: 350px;
+        margin-bottom: 20px;
+    }
+    .challenge-form button {
+        font-size: 1em;
+        padding: 15px;
+    }
 }
