@@ -155,3 +155,11 @@ class ChallengeListView(View):
                 'challenges': challenges,
                 'error': 'Proszę wybrać prawidłowe wyzwanie.'
             })
+        
+def about_page(request):
+
+    return render(request, 'game/about.html')
+
+def creators_page(request):
+
+    return render(request, 'game/creators.html')

@@ -1,4 +1,15 @@
 /* GENERAL STYLES */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(#fdfde8, #8ed8cd) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #333;
+}
 body.summary-body {
     display: flex;
     justify-content: center;
@@ -22,7 +33,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #e7f9f3, #fdf8e1);
+    background: linear-gradient(#fdfde8, #8ed8cd) !important;
     display: flex;
     justify-content: center;
     align-items: center;

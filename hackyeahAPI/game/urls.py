@@ -4,6 +4,8 @@ from django.urls import path
 from .views import (
     game_view,
     summary_view,
+    about_page,
+    creators_page,
     LandingPageView,
     CharacterSelectView,
     ChallengeSelectView,
@@ -19,4 +21,6 @@ urlpatterns = [
     path('challenge-select/', ChallengeSelectView.as_view(), name='challenge_select'),
     # NOWA ŚCIEŻKA
     path('challenge-list/', ChallengeListView.as_view(), name='challenge_list'),
+    path('about/', about_page, name='about_page'),
+    path('creators/', creators_page, name='creators_page')
 ]
