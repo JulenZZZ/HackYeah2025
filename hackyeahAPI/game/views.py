@@ -32,6 +32,7 @@ def summary_view(request):
 
         final_data = json.loads(final_state_json)
         final_attributes = final_data.get('attributes', {})
+        contractType = final_data.get('contractType', {})
         challenge_id = request.session.get('challenge_id')
         challenge_result = None
 
@@ -65,7 +66,7 @@ def summary_view(request):
 
         left_keys = ['Zdrowie', 'Oszczędności', 'Spełnienie']
 
-        income = final_attributes.get('wiedza', 0) * 100 + final_attributes.get('doświadczenie zawodowe', 0) * 150
+        income = final_data.get('income', 0)
         savings = final_attributes.get('oszczędności', 0) * 1000 + final_attributes.get('majątek', 0) * 500
 
         context = {
@@ -77,6 +78,7 @@ def summary_view(request):
             },
             'summary': {
                 'income': f"{income:,.0f}".replace(',', ' '),
+                'contractType': contractType,
                 'after_costs_value': (final_attributes.get('spełnienie', 0) + final_attributes.get('zdrowie', 0)) / 2,
                 'savings': f"{savings:,.2f}".replace(',', ' ').replace('.', ','),
                 'savings_value': final_attributes.get('oszczędności', 0)
