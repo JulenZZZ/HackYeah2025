@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const imageBase = character === 'Kobieta' ? 'girl' : 'boy';
         const imageNumber = gameState.currentStageIndex + 1;
-        if(characterImage) characterImage.src = `/mediafiles/${imageBase}${imageNumber}.png`;
+        if(characterImage) characterImage.src = `/static/images/${imageBase}${imageNumber}.webp`;
 
         currentQuestion.answers.forEach(answer => {
             const card = document.createElement('button');
