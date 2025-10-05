@@ -25,14 +25,14 @@ function preloadWithCallback(urls, allImagesLoadedCallback) {
 }
 
 const imagesToPreload = [
-  '/mediafiles/girl1.png',
-  '/mediafiles/girl2.png',
-  '/mediafiles/girl3.png',
-  '/mediafiles/girl4.png',
-  '/mediafiles/boy1.png',
-  '/mediafiles/boy2.png',
-  '/mediafiles/boy3.png',
-  '/mediafiles/boy4.png',
+  '/static/images/girl1.webp',
+  '/static/images/girl2.webp',
+  '/static/images/girl3.webp',
+  '/static/images/girl4.webp',
+  '/static/images/boy1.webp',
+  '/static/images/boy2.webp',
+  '/static/images/boy3.webp',
+  '/static/images/boy4.webp',
 ];
 
 preloadWithCallback(imagesToPreload, () => {

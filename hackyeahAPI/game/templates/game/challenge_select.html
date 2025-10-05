@@ -14,9 +14,9 @@
     <div class="main-container">
         <div class="character-panel">
             {% if request.session.character == 'Kobieta' %}
-                <img src="{% static 'images/woman.png' %}" alt="Wybrana postać: Kobieta" class="character-image">
+                <img src="/static/images/girl1.webp" alt="Wybrana postać: Kobieta" class="character-image">
             {% else %}
-                <img src="{% static 'images/man.png' %}" alt="Wybrana postać: Mężczyzna" class="character-image">
+                <img src="/static/images/boy1.webp" alt="Wybrana postać: Mężczyzna" class="character-image">
             {% endif %}
         </div>
         <div class="selection-panel">
