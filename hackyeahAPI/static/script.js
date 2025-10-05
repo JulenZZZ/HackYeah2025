@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isEducationalMode = false;
 
     // --- ELEMENTY DOM ---
+    const loader = document.getElementById('loader');
     const gameContainer = document.getElementById('game-container');
     const stagesContainer = document.getElementById('stages-container');
     const questionTextP = document.getElementById('question-text');
@@ -42,7 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
             initGame();
         } catch (error) {
             console.error("Nie udało się pobrać danych gry:", error);
-            if(gameContainer) gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania reguł gry z API. <br><small>${error.message}</small></p>`;
+            if(loader) loader.style.display = 'none';
+            if(gameContainer) {
+                gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania reguł gry z API. <br><small>${error.message}</small></p>`;
+                gameContainer.style.display = 'block';
+            }
         }
     };
     const initGame = () => {
@@ -97,7 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return totalModifier;
             }
         };
+
+        if(loader) loader.style.display = 'none';
+        if(gameContainer) gameContainer.style.display = 'flex';
         if(gameWrapper) gameWrapper.style.display = 'flex';
+
         buildStagesBar();
         updateSidebar();
         displayCurrentQuestion();
