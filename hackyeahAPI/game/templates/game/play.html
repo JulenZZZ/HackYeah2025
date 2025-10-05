@@ -12,6 +12,8 @@
 </head>
 <body>
 
+    <div id="loader"></div>
+
     <div id="game-init-data"
          data-character="{{ character }}"
          data-challenge="{{ challenge }}"
@@ -19,7 +21,7 @@
          style="display: none;"></div>
     <div id="csrf-token-container" style="display: none;">{% csrf_token %}</div>
 
-    <div id="game-container">
+    <div id="game-container" style="display: none;">
         <header id="life-stages-bar">
             <h2>ROZDZIAŁY ŻYCIA</h2>
             <div id="stages-container"></div>

@@ -58,7 +58,7 @@
         <div class="end-footer">
             <div class="end-summary-box" id="end-summary-left">
                 <div>Dochód: {{ summary.income }}zł</div>
-                <div>Rodzaj umowy: UOP</div>
+                <div>Rodzaj umowy: {{ summary.contractType }}</div>
                 <div>Po kosztach pozostało:</div>
                 <div class="summary-progress-bar-container progress-bar-container">
                     <div class="progress-bar" style="width: {{ summary.after_costs_value }}%;"></div>
