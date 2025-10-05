@@ -46,9 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'game_rules',
-    'character',
-    'game_sessions'
+    'api',
+    'game',
 ]
 
 STATIC_URL = 'static/'
@@ -69,10 +68,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'hackyeahAPI.urls'
 WSGI_APPLICATION = 'hackyeahAPI.wsgi.application'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,7 +83,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -128,9 +127,11 @@ USE_TZ = True
 
 
 # Definicje dla plików wgrywanych przez użytkowników (media files)
-MEDIA_URL = '/media/'
+MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = BASE_DIR / 'mediafiles'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
