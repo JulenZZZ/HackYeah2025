@@ -197,6 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(isAvailable) {
                     applyImpacts(answer.impacts);
                     gameState.currentQuestionIndex++;
+                    if (questionTextP.textContent === 'Jaki rodzaj umowy wybierasz?') {
+                        
+                        if (card.textContent.indexOf('B2B') > -1) {
+                            gameState.contractType = 'B2B';
+                        } else if (card.textContent.indexOf('UOP') > -1) {
+                            gameState.contractType = 'UOP'
+                        } else {
+                            gameState.contractType = 'Brak'
+                        }
+                    }
                     updateSidebar();
                     displayCurrentQuestion();
                 }
