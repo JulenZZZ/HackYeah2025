@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wirtualne Jutro - Podsumowanie</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="summary-body">
+
+    <div id="summary-container-wrapper">
+        <h2 class="end-title">PODSUMOWANIE</h2>
+
+        {% if challenge_result %}
+            <div class="challenge-result-{{ challenge_result.status }}">
+                {{ challenge_result.message }}
+            </div>
+        {% endif %}
+
+        <div id="end-stages-bar">
+            {% for stage in life_stages %}
+                <div class="stage">{{ stage }}</div>
+            {% endfor %}
+        </div>
+        <div class="end-main-content">
+            <div class="end-attributes-panel" id="end-attributes-left">
+                {% for name, attr in attributes.left.items %}
+                <div class="end-attribute">
+                    {{ name }}
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ attr.value }}%; background-color: {{ attr.color }};"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="end-center-image">
+                {% if character == 'Kobieta' %}
+                    <img src="/static/images/girl4.webp" alt="Podsumowanie życia">
+                {% else %}
+                    <img src="/static/images/boy4.webp" alt="Podsumowanie życia">
+                {% endif %}
+            </div>
+            <div class="end-attributes-panel" id="end-attributes-right">
+                {% for name, attr in attributes.right.items %}
+                <div class="end-attribute">
+                    {{ name }}
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ attr.value }}%; background-color: {{ attr.color }};"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="end-footer">
+            <div class="end-summary-box" id="end-summary-left">
+                <div>Dochód: {{ summary.income }}zł</div>
+                <div>Rodzaj umowy: {{ summary.contractType }}</div>
+                <div>Po kosztach pozostało:</div>
+                <div class="summary-progress-bar-container progress-bar-container">
+                    <div class="progress-bar" style="width: {{ summary.after_costs_value }}%;"></div>
+                </div>
+            </div>
+            <div class="end-summary-box" id="end-summary-right">
+                <div>Suma oszczędności emerytalnych: {{ summary.savings }}zł</div>
+                <div class="summary-progress-bar-container progress-bar-container">
+                    <div class="progress-bar" style="width: {{ summary.savings_value }}%;"></div>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'landing_page' %}" id="restart-button">Zagraj Ponownie</a>
+    </div>
+
+</body>
+</html>

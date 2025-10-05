@@ -1,16 +1,40 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Witaj w Grze!</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 100px; }
-        a { display: inline-block; padding: 15px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 1.2em; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wirtualne Jutro</title>
+    <link rel="stylesheet" href="{% static 'landing_page.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Witaj w naszej grze symulacyjnej!</h1>
-    <p>Przejdź przez kolejne etapy życia i zobacz, jak Twoje decyzje wpłyną na przyszłość.</p>
-    <a href="{% url 'character_select' %}">Rozpocznij grę</a>
+    <div class="main-container">
+        <div class="left-panel">
+            <img src="/static/images/family.webp" alt="Ilustracja rodziny" class="family-image">
+            <a href="{% url 'character_select' %}" class="btn btn-create">WYBIERZ POSTAĆ</a>
+        </div>
+        <div class="right-panel">
+            <div class="card title-card">
+                <h1>Witaj w Wirtualnym Jutrze!</h1>
+            </div>
+            <div class="card info-card">
+                <p>Wirtualne Jutro to gra, w której użytkownik ma do wyboru losowo generowane karty, których wybór decyduje o jego przyszłości.</p>
+            </div>
+            <div class="menu-buttons">
+                <a href="#" class="btn btn-menu">Ustawienia</a>
+                <a href="{% url 'about_page' %}" class="btn btn-menu">O Aplikacji</a>
+                <a href="{% url 'creators_page' %}" class="btn btn-menu">Twórcy</a>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Script -->
+
+    <script src="{% static 'api/js/popup.js' %}"></script>
+
 </body>
 </html>

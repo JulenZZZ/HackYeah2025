@@ -1,22 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wybierz Postać</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 100px; }
-        form { display: flex; justify-content: center; gap: 20px; }
-        button { padding: 15px 30px; font-size: 1.2em; cursor: pointer; border: 2px solid #ccc; background: white; border-radius: 5px; }
-        button:hover { background: #f0f0f0; }
-        .error { color: red; margin-top: 20px; }
-    </style>
+    <link rel="stylesheet" href="{% static 'character_select.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>Krok 1: Wybierz swoją postać</h1>
-    <form method="post">
+
+    <form method="post" class="character-selection-form">
         {% csrf_token %}
-        <button type="submit" name="character" value="Kobieta">Kobieta</button>
-        <button type="submit" name="character" value="Mężczyzna">Mężczyzna</button>
+
+        <div class="character-choice">
+            <button type="submit" name="character" value="Kobieta" class="character-button">
+                <img src="/static/images/girl1.webp" alt="Wybierz kobietę">
+            </button>
+        </div>
+
+        <div class="arrows-container">
+            <div class="arrow left">Wybierz</div>
+            <div class="arrow right">Wybierz</div>
+        </div>
+
+        <div class="character-choice">
+             <button type="submit" name="character" value="Mężczyzna" class="character-button">
+                <img src="/static/images/boy1.webp" alt="Wybierz mężczyznę">
+            </button>
+        </div>
     </form>
 
     {% if error %}
