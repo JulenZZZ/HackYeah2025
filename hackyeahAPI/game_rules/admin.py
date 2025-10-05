@@ -77,8 +77,3 @@ class AnswerAdmin(admin.ModelAdmin):
 
   # Dołączamy możliwość dodawania warunków i wpływów na stronie odpowiedzi.
   inlines = [ConditionInline, ImpactInline]
-
-# Rejestracja modeli, dla których nie tworzyliśmy osobnych klas Admin
-# Te modele będą miały domyślny interfejs, ale są potrzebne głównie jako inlines.
-# admin.site.register(Condition)
-# admin.site.register(Impact)
