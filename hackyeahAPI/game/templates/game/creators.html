@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twórcy - Wirtualne Jutro</title>
+     <link rel="stylesheet" href="{% static 'landing_page.css' %}">
+    <style>
+   
+        html, body {
+            min-height: 100%;
+            height: auto;
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 0;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .right-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+      
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .creator {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            padding: 14px;
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+        .creator:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+        }
+
+        .creator h3 { margin: 0; font-size: 1.05em; font-weight: 700; color: #333; }
+        .creator p  { margin: 8px 0 0; color: #555; font-size: 0.95em; }
+
+        .team-photo { max-width: 100%; border-radius: 16px; margin-bottom: 18px; }
+
+        
+        @media (max-width: 800px) {
+            .creators-grid { grid-template-columns: 1fr; }
+            .right-panel { padding: 0 16px; }
+            html, body { padding: 20px 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="right-panel">
+            <div class="card title-card" style="max-width: 900px;">
+                <h1>Zespół Twórców</h1>
+            </div>
+
+            <div class="card info-card" style="max-width: 900px;">
+               
+                <img src="/static/images/team_photo.png" alt="Zdjęcie zespołu" class="team-photo">
+
+                
+                <div class="creators-grid">
+                    <div class="creator">
+                    <h3>Arkadiusz Pabian</h3>
+                    <p>Leader zepołu, odpowiedzialny za front-end.</p>
+                </div>
+                <div class="creator">
+                    <h3>Szymon Główka</h3>
+                    <p>Odpowiedzialny za back-end</p>
+                </div>
+                <div class="creator">
+                    <h3>Paulina Rutkowska</h3>
+                    <p>Odpowiedzialna za prezentację.</p>
+                </div>
+                <div class="creator">
+                    <h3>Pola Palonek</h3>
+                    <p>Odpowiedzialna za logikę aplikacji.</p>
+                </div>
+                <div class="creator">
+                    <h3>Julen Zulaika</h3>
+                    <p>Odpowiedzialny za front-end i back-end.</p>
+                </div>
+                <div class="creator">
+                    <h3>Mateusz Łagocki</h3>
+                    <p>Odpowiedzialny za testy.</p>
+                </div>
+                </div>
+            </div>
+
+            <div class="menu-buttons" style="max-width: 900px;">
+                <a href="/" class="btn btn-menu">Powrót</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
