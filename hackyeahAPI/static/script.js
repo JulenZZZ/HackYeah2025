@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentQuestionIndex: 0,
             contractType: 'brak',
             income: 0,
+            retirementSavings: 0,
             modifier: function () {
 
                 // Zdrowie ma podstawowy wpływ, jeśli jest niskie, mocno obniża modyfikator.
@@ -256,6 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             gameState.income = 0;
                         }
                     }
+
+                    if (questionTextP.textContent === 'Czy odkładasz dodatkowo pieniądze na swoją emeryturę? Jeśli tak, to ile?') {
+
+                        if (card.textContent.indexOf('10%') > -1) {
+                            gameState.retirementSavings = .1;
+                        } else if (card.textContent.indexOf('15%') > -1) {
+                            gameState.retirementSavings = .15;
+                        }
+                    }
+                    
                     updateSidebar();
                     displayCurrentQuestion();
                 }
@@ -268,7 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalState = {
             attributes: gameState.playerAttributes,
             income: gameState.income * gameState.modifier(),
-            contractType: gameState.contractType
+            contractType: gameState.contractType,
+            retirementSavings: gameState.retirementSavings
         };
 
         const finalStateJSON = JSON.stringify(finalState);
