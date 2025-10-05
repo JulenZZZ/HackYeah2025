@@ -61,6 +61,41 @@ document.addEventListener('DOMContentLoaded', () => {
             currentQuestionIndex: 0,
             contractType: 'brak',
             income: 0,
+            retirementSavings: 0,
+            modifier: function () {
+
+                // Zdrowie ma podstawowy wpływ, jeśli jest niskie, mocno obniża modyfikator.
+                // Dzielimy przez 100, aby uzyskać wartość między 0 a 1.
+                let zdrowieWpływ = this.playerAttributes['zdrowie'] / 100;
+
+                // Wiedza poprawia modyfikator, ale z malejącymi zyskami (np. logarytmicznie lub pierwiastek),
+                // aby początkowe punkty dawały większy skok niż kolejne.
+                // Tutaj używam pierwiastka kwadratowego dla "miękkiego" wzrostu.
+                // Dodajemy 1, aby uniknąć pierwiastka z 0 i żeby mieć bazę 1, gdy wiedza = 0.
+                let wiedzaWpływ = Math.sqrt(this.playerAttributes['wiedza'] + 1) / 5; // Dzielimy przez 5, aby skala była rozsądna.
+
+                // Doświadczenie zawodowe również zwiększa modyfikator, ale może mieć bardziej liniowy wpływ
+                // lub też z pewnym progiem. Tutaj prosty wzrost liniowy, skalowany.
+                let doswiadczenieWpływ = this.playerAttributes['doświadczenie zawodowe'] / 20; // Skalujemy, żeby nie dominowało.
+
+                // Łączymy wpływy. Możemy je mnożyć, aby efekt był bardziej złożony (np. brak zdrowia mocno obniża całość),
+                // lub sumować z wagami. Wybieram mnożenie zdrowia z sumą pozostałych, co daje,
+                // że jeśli zdrowie jest bliskie zeru, modyfikator też będzie niski, niezależnie od wiedzy/doświadczenia.
+                // Maksymalne wartości dla wiedzy i doświadczenia trzeba dostosować do oczekiwanej skali gry.
+
+                // Ograniczamy wpływ wiedzy i doświadczenia, żeby nie rosły w nieskończoność.
+                wiedzaWpływ = Math.min(wiedzaWpływ, 1.0); // Maksymalnie 1.0 z wiedzy
+                doswiadczenieWpływ = Math.min(doswiadczenieWpływ, 1.0); // Maksymalnie 1.0 z doświadczenia
+
+                let bazowyModyfikator = 0.25; // Startowy modyfikator, gdy wszystko jest na 0 (oprócz zdrowia).
+
+                let totalModifier = zdrowieWpływ * (bazowyModyfikator + wiedzaWpływ + doswiadczenieWpływ);
+
+                // Możemy również dodać minimalny modyfikator, żeby nigdy nie spadł do zera całkowicie.
+                totalModifier = Math.max(totalModifier, 0.1); // Nigdy poniżej 0.1
+
+                return totalModifier;
+            }
         };
         if(gameWrapper) gameWrapper.style.display = 'flex';
         buildStagesBar();
@@ -98,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const savings = gameState.playerAttributes['oszczędności'] * 100;
         summaryContainer.innerHTML = `
-            <div class="summary-item"><span>Dochód:</span> <span>${gameState.income} zł</span></div>
+            <div class="summary-item"><span>Dochód:</span> <span>${gameState.income * gameState.modifier()} zł</span></div>
             <div class="summary-item"><span>Rodzaj umowy:</span> <span>${gameState.contractType}</span></div>
             <div class="summary-item"><span>Oszczędności:</span> <span>${savings.toFixed(2)} zł</span></div>`;
     };
@@ -207,6 +242,31 @@ document.addEventListener('DOMContentLoaded', () => {
                             gameState.contractType = 'Brak'
                         }
                     }
+
+                    if (questionTextP.textContent === 'Czas wybrać pracę. Jaki zawód wybierasz?') {
+
+                        if (card.textContent.indexOf('10000') > -1) {
+                            gameState.income = 10000;
+                        } else if (card.textContent.indexOf('12000') > -1) {
+                            gameState.income = 12000;
+                        } else if (card.textContent.indexOf('6000') > -1) {
+                            gameState.income = 6000;
+                        } else if (card.textContent.indexOf('4500') > -1) {
+                            gameState.income = 4500;
+                        } else {
+                            gameState.income = 0;
+                        }
+                    }
+
+                    if (questionTextP.textContent === 'Czy odkładasz dodatkowo pieniądze na swoją emeryturę? Jeśli tak, to ile?') {
+
+                        if (card.textContent.indexOf('10%') > -1) {
+                            gameState.retirementSavings = .1;
+                        } else if (card.textContent.indexOf('15%') > -1) {
+                            gameState.retirementSavings = .15;
+                        }
+                    }
+                    
                     updateSidebar();
                     displayCurrentQuestion();
                 }
@@ -218,8 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const endGame = () => {
         const finalState = {
             attributes: gameState.playerAttributes,
-            income: gameState.income,
-            contractType: gameState.contractType
+            income: gameState.income * gameState.modifier(),
+            contractType: gameState.contractType,
+            retirementSavings: gameState.retirementSavings
         };
 
         const finalStateJSON = JSON.stringify(finalState);
