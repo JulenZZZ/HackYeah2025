@@ -6,16 +6,18 @@ Event site: [HackYeah](https://hackyeah.pl/)
 
 Event organizer: [ProIdea](https://proidea.pl/)
 
-## 👥 Team 404 Found
+## 👥 Team GiveMeASecond
 
-| Name                 | Role / Focus                                    | GitHub Handle                                           |
-|:---------------------|:------------------------------------------------|:--------------------------------------------------------|
-| **Mateusz**          | (Enter actual role, e.g., Backend Developer)    | [@Mateuszl28](https://github.com/Mateuszl28)            |
-| **Arkadiusz Pabian** | (Enter actual role, e.g., Frontend Developer)   | [@ArkadiuszPabian](https://github.com/ArkadiuszPabian)  |
-| **Bueno**            | (Enter actual role, e.g., UI/UX Designer)       | [@Bueno](https://github.com/username-3)                 |
-| **Szymon**           | (Backend Developer, Database Designer)          | [@szymonglowka](https://github.com/username-4)          |
-| **Lacerta**          | (Enter actual role, e.g., Technical Writer)     | [@Lacerta](https://github.com/username-5)               |
-| **Pau**              | (Enter actual role, e.g., Project Manager)      | [@Paulina](https://github.com/username-6)               |
+This table outlines the core members of the team, their primary role or focus area, and their respective GitHub handles.
+
+| Name | Role / Focus | GitHub Handle |
+| :--- | :--- | :--- |
+| **Mateusz Łagocki** | Tester | [@Mateuszl28](https://github.com/Mateuszl28) |
+| **Arkadiusz Pabian** | Leader | [@ArkadiuszPabian](https://github.com/ArkadiuszPabian) |
+| **Julen Z** | Frontend Developer | [@Bueno](https://github.com/JulenZZZ) |
+| **Szymon Główka** | Backend Developer | [@szymonglowka](https://github.com/szymonglowka) |
+| **Pola Pal** | Creative person | [@Lacerta](https://github.com/username-5) |
+| **Paulina Rutkowska** | UX / Graphic Designer | [@Paulina](https://github.com/paulinarutkowska) |
 
 ## Developer guidelines
 
@@ -33,7 +35,3 @@ Branching: [Feature Branch Workflow](https://www.atlassian.com/git/tutorials/com
 | **`test`**     | `test/`       | Adding new tests or correcting existing tests.                                 | `test/user-service-logic`  |
 | **`docs`**     | `docs/`       | Changes to documentation (README, guides).                                     | `docs/update-readme-team`  |
 | **`refactor`** | `refactor/`   | Code change that doesn't fix a bug or add a feature (e.g., reorganizing code). | `refactor/move-auth-files` |
-
-### 📧 Contact
-
-Reach us at **[404found.hackyeah2025@gmail.com](mailto:404found.hackyeah2025@gmail.com)**
