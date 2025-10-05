@@ -68,7 +68,7 @@ def summary_view(request):
 
         income = final_data.get('income', 0)
         retirementSavings = final_data.get('retirementSavings', 0)
-        savings = (income * (1 - 0.1371) * (1 - retirementSavings)) * 12 * 45 * .15
+        savings = ((income * 0.1371) + (income * retirementSavings)) * 12 * 35
 
         context = {
             'character': request.session.get('character'),
