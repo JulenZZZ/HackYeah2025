@@ -23,9 +23,18 @@
             <div class="title-card">WYBIERZ TRYB</div>
             <form method="post" class="challenge-form">
                 {% csrf_token %}
-                <button type="submit" name="challenge" value="Swobodny">SWOBODNY - opis</button>
-                <button type="submit" name="challenge" value="Wyzwanie">WYZWANIE - opis</button>
-                <button type="submit" name="challenge" value="Edukacja">EDUKACJA - opis</button>
+                <button type="submit" name="challenge" value="Swobodny">
+                    <p>SWOBODNY</p>
+                    <span>Chcesz zobaczyć dokąd doprowadzą Cię Twoje decyzje? Ten tryb może być dla Ciebie!</span>
+                </button>
+                <button type="submit" name="challenge" value="Wyzwanie">
+                    <p>WYZWANIE</p>
+                    <span>Sprawdź swoje możliwości oraz jak poradzisz sobie w różnych scenariuszach życia</span>
+                </button>
+                <button type="submit" name="challenge" value="Edukacja">
+                    <p>EDUKACJA</p>
+                    <span>W tym trybie uświadomimy Cię, jakie konsekwencje mają Twoje decyzje</span>
+                </button>
             </form>
              {% if error %}
                 <p class="error">{{ error }}</p>

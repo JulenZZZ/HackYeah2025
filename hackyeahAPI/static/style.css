@@ -157,6 +157,7 @@ body, html {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 300px;
 }
 .attribute {
     display: flex;
@@ -165,7 +166,7 @@ body, html {
 }
 .attribute-name {
     font-weight: 600;
-    width: 100px;
+    width: 125px;
     flex-shrink: 0;
 }
 .progress-bar-container {
