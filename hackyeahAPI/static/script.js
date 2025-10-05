@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- STAN GRY ---
     let gameState = {};
     let gameData = [];
-    let character = 'Kobieta'; // Domyślna wartość
-    let challenge = 'Swobodny'; // Domyślna wartość
+    let character = 'Kobieta';
+    let challenge = 'Swobodny';
 
     // --- ELEMENTY DOM ---
+    const loadingOverlay = document.getElementById('loading-overlay');
     const gameContainer = document.getElementById('game-container');
     const stagesContainer = document.getElementById('stages-container');
     const questionTextP = document.getElementById('question-text');
@@ -16,27 +16,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryContainer = document.getElementById('summary-container');
     const gameWrapper = document.getElementById('game-wrapper');
 
-    // --- SŁOWNIK KOLORÓW ---
-    const attributeColors = {
-        'Zdrowie': '#2ecc71',
-        'Oszczędności': '#f1c40f',
-        'Spełnienie': '#3498db',
-        'Wiedza': '#9b59b6',
-        'Ryzyko/Stres': '#e74c3c',
-        'społeczeństwo': '#e67e22',
+    // --- SŁOWNIK KOLORÓW I NAZW ---
+    const attributeMeta = {
+        'zdrowie': { color: '#2ecc71', name: 'Zdrowie' },
+        'oszczędności': { color: '#f1c40f', name: 'Oszczędności' },
+        'spełnienie': { color: '#3498db', name: 'Spełnienie' },
+        'wiedza': { color: '#9b59b6', name: 'Wiedza' },
+        'ryzyko': { color: '#e74c3c', name: 'Ryzyko/Stres' },
+        'umiejętności społeczne': { color: '#e67e22', name: 'Społeczeństwo' },
+        'majątek': { color: '#1abc9c', name: 'Majątek' },
+        'doświadczenie zawodowe': { color: '#34495e', name: 'Doświadczenie' }
     };
 
     // --- POBIERANIE DANYCH ---
     const fetchGameData = async () => {
+        if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
         try {
+            // ZMIANA: Używamy wewnętrznego API Django
             const response = await fetch('/api/game-rules/');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
             gameData = await response.json();
             initGame();
-        } catch (error)
- {
+        } catch (error) {
             console.error("Nie udało się pobrać danych gry:", error);
-            gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania gry. Spróbuj odświeżyć stronę.</p>`;
+            if(gameContainer) gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania reguł gry z API. <br><small>${error.message}</small></p>`;
+        } finally {
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
         }
     };
 
@@ -44,15 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const initGame = () => {
         gameState = {
             playerAttributes: {
-                'Zdrowie': 80,
-                'Oszczędności': 20,
-                'Spełnienie': 50,
-                'Wiedza': 10,
-                'Ryzyko/Stres': 10,
-                'społeczeństwo': 30,
+                'zdrowie': 80,
+                'oszczędności': 20,
+                'spełnienie': 50,
+                'wiedza': 10,
+                'ryzyko': 10,
+                'umiejętności społeczne': 30,
+                'majątek': 50,
+                'doświadczenie zawodowe': 0
             },
             currentStageIndex: 0,
             currentQuestionIndex: 0,
+            contractType: 'brak',
+            income: 0,
         };
         if(gameWrapper) gameWrapper.style.display = 'flex';
         buildStagesBar();
@@ -78,28 +92,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateSidebar = () => {
         if (!attributesContainer || !summaryContainer) return;
         attributesContainer.innerHTML = '';
-        for (const attr in gameState.playerAttributes) {
-            const value = gameState.playerAttributes[attr];
+        for (const attrKey in gameState.playerAttributes) {
+            const meta = attributeMeta[attrKey] || { color: '#bdc3c7', name: attrKey };
+            const value = gameState.playerAttributes[attrKey];
             const attrElement = document.createElement('div');
             attrElement.className = 'attribute';
             attrElement.innerHTML = `
-                <div class="attribute-name">${attr}</div>
+                <div class="attribute-name">${meta.name}</div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${value}%; background-color: ${attributeColors[attr] || '#bdc3c7'};"></div>
+                    <div class="progress-bar" style="width: ${value}%; background-color: ${meta.color};"></div>
                 </div>`;
             attributesContainer.appendChild(attrElement);
         }
 
+        const savings = gameState.playerAttributes['oszczędności'] * 100; // Przykładowy mnożnik
         summaryContainer.innerHTML = `
-            <div class="summary-item"><span>Dochód:</span> <span>brak</span></div>
-            <div class="summary-item"><span>Rodzaj umowy:</span> <span>brak</span></div>
-            <div class="summary-item"><span>Po kosztach:</span> <span>-</span></div>
-            <div class="summary-item"><span>Oszczędności emerytalne:</span> <span>210,99 zł</span></div>`;
+            <div class="summary-item"><span>Dochód:</span> <span>${gameState.income} zł</span></div>
+            <div class="summary-item"><span>Rodzaj umowy:</span> <span>${gameState.contractType}</span></div>
+            <div class="summary-item"><span>Oszczędności:</span> <span>${savings.toFixed(2)} zł</span></div>`;
     };
 
-    // --- GŁÓWNA PĘTLA GRY ---
+    // --- LOGIKA GRY ---
+    const applyImpacts = (impacts) => {
+        impacts.forEach(impact => {
+            // Upewnij się, że nazwa atrybutu jest pisana małymi literami
+            const attr = impact.attribute.toLowerCase();
+            if (gameState.playerAttributes.hasOwnProperty(attr)) {
+                let currentValue = gameState.playerAttributes[attr];
+                switch (impact.operation) {
+                    case '+':
+                        currentValue += impact.value;
+                        break;
+                    case '-':
+                        currentValue -= impact.value;
+                        break;
+                    case '*%':
+                        currentValue *= (1 + impact.value / 100);
+                        break;
+                }
+                // Ogranicz wartość atrybutu do przedziału 0-100
+                gameState.playerAttributes[attr] = Math.max(0, Math.min(100, currentValue));
+            }
+        });
+    };
+
+    const checkConditions = (conditions) => {
+        if (!conditions || conditions.length === 0) return true;
+        return conditions.every(condition => {
+            const attr = condition.attribute.toLowerCase();
+            const playerValue = gameState.playerAttributes[attr];
+            if (playerValue === undefined) return false;
+
+            switch (condition.operator) {
+                case '>=': return playerValue >= condition.value;
+                case '<=': return playerValue <= condition.value;
+                case '>':  return playerValue > condition.value;
+                case '<':  return playerValue < condition.value;
+                case '==': return playerValue == condition.value;
+                default: return false;
+            }
+        });
+    };
+
     const displayCurrentQuestion = () => {
-        if (gameData.length === 0 || !questionTextP) return;
+        if (gameData.length === 0) return;
 
         const currentStage = gameData[gameState.currentStageIndex];
         if (!currentStage) {
@@ -108,6 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
+
+        // Pętla do pomijania pytań, które nie spełniają warunków
+        while(currentQuestion && !checkConditions(currentQuestion.conditions)) {
+            gameState.currentQuestionIndex++;
+            currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
+        }
+
         if (!currentQuestion) {
             gameState.currentStageIndex++;
             gameState.currentQuestionIndex = 0;
@@ -116,8 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        questionTextP.textContent = currentQuestion.text;
-        answersContainer.innerHTML = '';
+        if(questionTextP) questionTextP.textContent = currentQuestion.text;
+        if(answersContainer) answersContainer.innerHTML = '';
+
         const imageBase = character === 'Kobieta' ? 'girl' : 'boy';
         const imageNumber = gameState.currentStageIndex + 1;
         if(characterImage) characterImage.src = `/mediafiles/${imageBase}${imageNumber}.png`;
@@ -125,13 +189,23 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuestion.answers.forEach(answer => {
             const card = document.createElement('button');
             card.className = 'answer-card';
-            card.innerHTML = `<h3>${answer.text}</h3><p>${answer.description || 'Kliknij, aby wybrać tę opcję.'}</p>`;
+            card.innerHTML = `<h3>${answer.text}</h3>`;
+
+            const isAvailable = checkConditions(answer.conditions);
+            if (!isAvailable) {
+                card.disabled = true;
+                // Można dodać klasę CSS do stylizacji nieaktywnych odpowiedzi
+                card.style.opacity = "0.5";
+                card.style.cursor = "not-allowed";
+            }
+
             card.onclick = () => {
-                // Tutaj w przyszłości będzie logika wpływu na atrybuty
-                // applyImpacts(answer.impacts);
-                gameState.currentQuestionIndex++;
-                updateSidebar();
-                displayCurrentQuestion();
+                if(isAvailable) {
+                    applyImpacts(answer.impacts);
+                    gameState.currentQuestionIndex++;
+                    updateSidebar();
+                    displayCurrentQuestion();
+                }
             };
             answersContainer.appendChild(card);
         });
@@ -139,17 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ZAKOŃCZENIE GRY ---
     const endGame = () => {
-        const finalStateJSON = JSON.stringify(gameState.playerAttributes);
+        const finalState = {
+            attributes: gameState.playerAttributes,
+            income: gameState.income,
+            contractType: gameState.contractType
+        };
+
+        const finalStateJSON = JSON.stringify(finalState);
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '/summary/'; // URL do widoku podsumowania
+        form.action = '/summary/';
 
         const csrfTokenInput = document.querySelector('#csrf-token-container input[name="csrfmiddlewaretoken"]');
         if (!csrfTokenInput) {
-            console.error('CSRF token not found!');
+            console.error('CSRF token not found for summary!');
             return;
         }
-
         form.appendChild(csrfTokenInput.cloneNode(true));
 
         const stateInput = document.createElement('input');
@@ -168,8 +247,5 @@ document.addEventListener('DOMContentLoaded', () => {
         character = gameInitDataEl.dataset.character;
         challenge = gameInitDataEl.dataset.challenge;
         fetchGameData();
-    } else {
-        // Ten kod nie powinien się uruchomić na stronie podsumowania, ale to dobre zabezpieczenie.
-        console.log("Nie jesteś w widoku gry, skrypt nie będzie inicjowany.");
     }
 });
