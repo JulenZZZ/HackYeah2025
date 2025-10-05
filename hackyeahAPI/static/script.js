@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const initGame = () => {
         gameState = {
             playerAttributes: {
-                'zdrowie': 80,
-                'oszczędności': 20,
-                'spełnienie': 50,
-                'wiedza': 10,
-                'ryzyko': 10,
-                'umiejętności społeczne': 30,
-                'majątek': 50,
+                'zdrowie': 50,
+                'oszczędności': 0,
+                'spełnienie': 0,
+                'wiedza': 0,
+                'ryzyko': 0,
+                'umiejętności społeczne': 0,
+                'majątek': 0,
                 'doświadczenie zawodowe': 0
             },
             currentStageIndex: 0,
