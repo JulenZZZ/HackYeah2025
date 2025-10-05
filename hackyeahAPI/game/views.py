@@ -1,10 +1,11 @@
 # hackyeahAPI/game/views.py
 import json
+from django.http import JsonResponse, HttpResponseServerError
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View
 from django.views.decorators.http import require_http_methods
-from django.urls import reverse
 
+# Usunięto widok generate_proxy_view
 
 def game_view(request):
     character = request.session.get('character')
@@ -13,7 +14,6 @@ def game_view(request):
     context = {'character': character, 'challenge': request.session.get('challenge')}
     return render(request, 'game/play.html', context)
 
-
 @require_http_methods(["POST"])
 def summary_view(request):
     try:
@@ -21,17 +21,29 @@ def summary_view(request):
         if not final_state_json:
             return redirect('landing_page')
 
-        final_attributes = json.loads(final_state_json)
+        final_data = json.loads(final_state_json)
+        final_attributes = final_data.get('attributes', {})
 
-        attribute_colors = {
-            'Zdrowie': '#2ecc71', 'Oszczędności': '#f1c40f', 'Spełnienie': '#3498db',
-            'Wiedza': '#9b59b6', 'Ryzyko/Stres': '#e74c3c', 'społeczeństwo': '#e67e22',
+        attribute_meta = {
+            'zdrowie': {'name': 'Zdrowie', 'color': '#2ecc71'},
+            'oszczędności': {'name': 'Oszczędności', 'color': '#f1c40f'},
+            'spełnienie': {'name': 'Spełnienie', 'color': '#3498db'},
+            'wiedza': {'name': 'Wiedza', 'color': '#9b59b6'},
+            'ryzyko': {'name': 'Ryzyko/Stres', 'color': '#e74c3c'},
+            'umiejętności społeczne': {'name': 'Społeczeństwo', 'color': '#e67e22'},
+            'majątek': {'name': 'Majątek', 'color': '#1abc9c'},
+            'doświadczenie zawodowe': {'name': 'Doświadczenie', 'color': '#34495e'},
         }
 
-        attributes_with_meta = {name: {'value': value, 'color': attribute_colors.get(name)} for name, value in
-                                final_attributes.items()}
+        attributes_with_meta = {
+            meta['name']: {'value': final_attributes.get(key, 0), 'color': meta['color']}
+            for key, meta in attribute_meta.items() if key in final_attributes
+        }
 
         left_keys = ['Zdrowie', 'Oszczędności', 'Spełnienie']
+
+        income = final_attributes.get('wiedza', 0) * 100 + final_attributes.get('doświadczenie zawodowe', 0) * 150
+        savings = final_attributes.get('oszczędności', 0) * 1000 + final_attributes.get('majątek', 0) * 500
 
         context = {
             'life_stages': ['Młodość', 'Młody dorosły', 'Dorosłość', 'Emerytura'],
@@ -40,16 +52,16 @@ def summary_view(request):
                 'right': {k: attributes_with_meta[k] for k in attributes_with_meta if k not in left_keys}
             },
             'summary': {
-                'income': f"{final_attributes.get('Wiedza', 0) * 120:,}".replace(',', ' '),
-                'after_costs_value': (final_attributes.get('Spełnienie', 0) + final_attributes.get('Zdrowie', 0)) / 2,
-                'savings': f"{final_attributes.get('Oszczędności', 0) * 10212.87:,.2f}".replace(',', ' ').replace('.',
-                                                                                                                  ','),
-                'savings_value': final_attributes.get('Oszczędności', 0)
+                'income': f"{income:,.0f}".replace(',', ' '),
+                'after_costs_value': (final_attributes.get('spełnienie', 0) + final_attributes.get('zdrowie', 0)) / 2,
+                'savings': f"{savings:,.2f}".replace(',', ' ').replace('.',','),
+                'savings_value': final_attributes.get('oszczędności', 0)
             }
         }
         return render(request, 'game/summary.html', context)
 
-    except (json.JSONDecodeError, KeyError):
+    except (json.JSONDecodeError, KeyError) as e:
+        print(f"Error in summary view: {e}")
         return redirect('landing_page')
 
 
