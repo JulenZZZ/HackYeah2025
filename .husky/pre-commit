@@ -1,2 +1,0 @@
-# Run lint-staged, which executes the three commands defined in package.json
-npx lint-staged
