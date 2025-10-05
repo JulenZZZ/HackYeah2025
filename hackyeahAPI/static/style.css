@@ -10,12 +10,14 @@ body, html {
     overflow: hidden;
     color: #333;
 }
+
 body.summary-body {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-#summary-container-wrapper {
+
+#summary-container-wrapper, #game-container {
     width: 95%;
     max-width: 1400px;
     height: 90vh;
@@ -27,32 +29,7 @@ body.summary-body {
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
-}
-
-body, html {
-    height: 100%;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(#fdfde8, #8ed8cd) !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    color: #333;
-}
-
-#game-container {
-    width: 95%;
-    max-width: 1400px;
-    height: 90vh;
-    background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 /* HEADER - LIFE STAGES */
@@ -70,6 +47,7 @@ body, html {
 #stages-container {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
 }
 .stage {
@@ -96,12 +74,14 @@ body, html {
 
 /* STORY PANEL (LEFT) */
 #story-panel {
-    flex: 3;
+    flex: 3 1 0;
+    min-width: 0;
     display: flex;
     gap: 20px;
 }
 #character-container {
     flex: 1;
+    max-width: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -113,6 +93,7 @@ body, html {
 }
 #event-container {
     flex: 2;
+    max-width: 65%;
     display: flex;
     flex-direction: column;
 }
@@ -124,10 +105,12 @@ body, html {
     font-weight: 600;
     text-align: center;
     margin-bottom: 20px;
+    min-height: 50px;
 }
+
 #answers-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     flex-grow: 1;
 }
@@ -139,6 +122,7 @@ body, html {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 2px solid transparent;
+    min-height: 80px;
 }
 .answer-card:hover {
     transform: translateY(-5px);
@@ -148,6 +132,7 @@ body, html {
 .answer-card h3 {
     margin: 0 0 10px 0;
     color: #3498db;
+    font-size: 1em;
 }
 .answer-card p {
     margin: 0;
@@ -156,7 +141,7 @@ body, html {
 
 /* SIDEBAR (RIGHT) */
 #sidebar {
-    flex: 1;
+    flex: 1 1 280px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -168,25 +153,31 @@ body, html {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 300px;
+    width: 100%;
 }
 .attribute {
     display: flex;
     align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
     gap: 10px;
 }
+
+/********** ZMIANA DLA SKALOWANIA PASKÓW POSTĘPU **********/
 .attribute-name {
     font-weight: 600;
-    width: 125px;
+    flex: 0 0 45%; /* Etykieta zawsze zajmuje 45% szerokości kontenera .attribute */
     flex-shrink: 0;
 }
 .progress-bar-container {
-    flex-grow: 1;
+    flex-grow: 1; /* Pasek postępu wypełnia resztę miejsca */
     height: 20px;
     background-color: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
 }
+/************************************************************/
+
 .progress-bar {
     height: 100%;
     border-radius: 10px;
@@ -213,13 +204,6 @@ body, html {
 
 
 /* --- END SCREEN STYLES --- */
-#end-screen {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-}
 .end-title {
     text-align: center;
     font-size: 1.5em;
@@ -231,9 +215,10 @@ body, html {
     justify-content: center;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 #end-stages-bar .stage {
-    background-color: #2ecc71; /* All stages are green/completed */
+    background-color: #2ecc71;
     color: white;
 }
 
@@ -272,6 +257,7 @@ body, html {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 .end-summary-box {
     width: 35%;
@@ -304,7 +290,7 @@ body, html {
 #restart-button:hover {
     background-color: #2ecc71;
 }
-/* NOWE STYLE DLA TRYBU EDUKACYJNEGO */
+/* EDUCATIONAL MODE & CHALLENGE RESULT */
 .tooltip {
     background-color: #f1c40f;
     color: #333;
@@ -313,8 +299,6 @@ body, html {
     margin-bottom: 20px;
     border: 2px solid #f39c12;
 }
-
-/* NOWE STYLE DLA WYNIKU WYZWANIA */
 .challenge-result-success {
     background-color: #2ecc71;
     color: white;
@@ -324,7 +308,6 @@ body, html {
     border-radius: 10px;
     margin-bottom: 15px;
 }
-
 .challenge-result-failure {
     background-color: #e74c3c;
     color: white;
@@ -334,7 +317,74 @@ body, html {
     border-radius: 10px;
     margin-bottom: 15px;
 }
-
 .hidden { display: none; }
 
+/* --- RESPONSIVE STYLES --- */
 
+/* Układ dla tabletów i większych telefonów */
+@media (max-width: 1024px) {
+    #game-wrapper {
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #answers-container {
+        grid-template-columns: 1fr;
+    }
+
+    #sidebar {
+        min-width: unset;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    #attributes-container, #summary-container {
+        flex-grow: 1;
+        max-width: 450px;
+    }
+
+    #story-panel {
+        flex-direction: column;
+    }
+    #character-container, #event-container {
+        max-width: 100%;
+    }
+    #character-image {
+        max-height: 200px;
+    }
+}
+
+/* Układ dla mniejszych telefonów */
+@media (max-width: 768px) {
+    #sidebar {
+        flex-direction: column;
+        align-items: center;
+    }
+    #attributes-container, #summary-container {
+        width: 90%;
+    }
+    .end-main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .end-attributes-panel {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .end-attribute {
+        width: 90%;
+    }
+    .end-summary-box {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .end-center-image {
+        max-width: 60%;
+        order: -1;
+    }
+}

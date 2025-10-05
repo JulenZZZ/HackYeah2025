@@ -47,20 +47,21 @@ h1 {
 }
 
 .character-button img {
-    max-width: 80%;
-    max-height: 450px;
+    max-width: 100%; /* Poprawiono, aby obraz był responsywny */
+    width: 300px; /* Ustawiono stałą szerokość dla spójności */
     height: auto;
     display: block;
     margin: 0 auto;
 }
 
 .arrows-container {
-    flex: 0 1 200px;
+    flex: 1; /* Uelastyczniono kontener */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 50px;
+    min-width: 150px; /* Zapewniono minimalną szerokość */
 }
 
 .arrow {
