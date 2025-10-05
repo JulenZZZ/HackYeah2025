@@ -92,9 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateAttributesDisplay = () => {
         attributesDiv.innerHTML = '';
         for (const attr in gameState.playerAttributes) {
+            const value = gameState.playerAttributes[attr];
             const attrElement = document.createElement('div');
             attrElement.className = 'attribute';
-            attrElement.innerHTML = `<span class="name">${attr.charAt(0).toUpperCase() + attr.slice(1)}:</span> ${gameState.playerAttributes[attr]}`;
+            attrElement.innerHTML = `
+                <div class="attribute-name">${attr.charAt(0).toUpperCase() + attr.slice(1)}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${value}%" data-value="${value}"></div>
+                </div>
+            `;
             attributesDiv.appendChild(attrElement);
         }
     };
@@ -172,9 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         finalAttributesDiv.innerHTML = ''; // Wyczyść poprzednie podsumowanie
         for (const attr in gameState.playerAttributes) {
+            const value = gameState.playerAttributes[attr];
             const attrElement = document.createElement('div');
             attrElement.className = 'attribute';
-            attrElement.innerHTML = `<span class="name">${attr.charAt(0).toUpperCase() + attr.slice(1)}:</span> ${gameState.playerAttributes[attr]}`;
+            attrElement.innerHTML = `
+                <div class="attribute-name">${attr.charAt(0).toUpperCase() + attr.slice(1)}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${value}%" data-value="${value}"></div>
+                </div>
+            `;
             finalAttributesDiv.appendChild(attrElement);
         }
     };
