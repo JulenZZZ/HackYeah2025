@@ -1,4 +1,4 @@
-# TwojaAplikacja/admin.py
+# hackyeahAPI/api/admin.py
 
 from django.contrib import admin
 from .models import (
@@ -7,20 +7,24 @@ from .models import (
   Question,
   Answer,
   Condition,
-  Impact
+  Impact,
+  Challenge, # NOWOŚĆ
+  EducationalContent # NOWOŚĆ
 )
 
 
 # --- Definicje Inline ---
-# Inlines pozwalają na edycję powiązanych modeli na tej samej stronie.
+
+class EducationalContentInline(admin.StackedInline):
+  """Pozwala dodawać treść edukacyjną bezpośrednio na stronie Pytania."""
+  model = EducationalContent
+  can_delete = False # Zazwyczaj pytanie ma jedną treść, więc wyłączamy usuwanie
+  verbose_name_plural = 'Treść Edukacyjna'
 
 class ConditionInline(admin.TabularInline):
-  """Pozwala dodawać warunki bezpośrednio podczas edycji Pytania lub Odpowiedzi."""
   model = Condition
-  extra = 1  # Liczba pustych formularzy do dodania nowego warunku.
+  extra = 1
 
-  # Wykluczamy pola, aby uniknąć redundancji - warunek będzie przypisany
-  # albo do pytania, albo do odpowiedzi, w zależności od kontekstu.
   def get_exclude(self, request, obj=None):
     if isinstance(obj, Question):
       return ['answer']
@@ -30,50 +34,48 @@ class ConditionInline(admin.TabularInline):
 
 
 class ImpactInline(admin.TabularInline):
-  """Pozwala dodawać wpływy bezpośrednio podczas edycji Odpowiedzi."""
   model = Impact
   extra = 1
 
 
 class AnswerInline(admin.TabularInline):
-  """Pozwala dodawać Odpowiedzi bezpośrednio podczas edycji Pytania."""
   model = Answer
   extra = 1
-  show_change_link = True  # Dodaje link do edycji odpowiedzi w osobnym oknie
+  show_change_link = True
 
 
 # --- Główne konfiguracje paneli Admina ---
 
 @admin.register(Attribute)
 class AttributeAdmin(admin.ModelAdmin):
-  """Panel administracyjny dla Atrybutów."""
   list_display = ('name',)
   search_fields = ('name',)
 
 @admin.register(LifeStage)
 class LifeStageAdmin(admin.ModelAdmin):
-  """Panel administracyjny dla Etapów Życia."""
   list_display = ('name', 'order')
   list_editable = ('order',)
 
+@admin.register(Challenge)
+class ChallengeAdmin(admin.ModelAdmin):
+    """Panel administracyjny dla Wyzwań."""
+    list_display = ('name', 'attribute_to_check', 'target_value')
+    list_filter = ('attribute_to_check',)
+    search_fields = ('name', 'description')
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-  """Panel administracyjny dla Pytań."""
   list_display = ('text', 'life_stage', 'order')
   list_filter = ('life_stage',)
   search_fields = ('text',)
   list_editable = ('order',)
 
-  # Dołączamy możliwość dodawania odpowiedzi i warunków na stronie pytania.
-  inlines = [ConditionInline, AnswerInline]
+  # Dodajemy EducationalContentInline na górze
+  inlines = [EducationalContentInline, ConditionInline, AnswerInline]
 
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-  """Panel administracyjny dla Odpowiedzi."""
   list_display = ('text', 'question')
   search_fields = ('text', 'question__text')
-
-  # Dołączamy możliwość dodawania warunków i wpływów na stronie odpowiedzi.
   inlines = [ConditionInline, ImpactInline]

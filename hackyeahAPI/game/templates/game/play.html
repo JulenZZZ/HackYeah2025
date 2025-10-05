@@ -12,7 +12,11 @@
 </head>
 <body>
 
-    <div id="game-init-data" data-character="{{ character }}" data-challenge="{{ challenge }}" style="display: none;"></div>
+    <div id="game-init-data"
+         data-character="{{ character }}"
+         data-challenge="{{ challenge }}"
+         data-is-educational-mode="{{ is_educational_mode|yesno:'true,false' }}"
+         style="display: none;"></div>
     <div id="csrf-token-container" style="display: none;">{% csrf_token %}</div>
 
     <div id="game-container">
@@ -28,6 +32,7 @@
                 </div>
                 <div id="event-container">
                     <p id="question-text"></p>
+                    <div id="educational-content" class="tooltip" style="display: none;"></div>
                     <div id="answers-container"></div>
                 </div>
             </section>

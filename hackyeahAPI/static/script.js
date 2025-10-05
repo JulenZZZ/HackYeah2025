@@ -1,12 +1,14 @@
+// hackyeahAPI/static/script.js
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- STAN GRY ---
     let gameState = {};
     let gameData = [];
     let character = 'Kobieta';
     let challenge = 'Swobodny';
+    let isEducationalMode = false;
 
     // --- ELEMENTY DOM ---
-    const loadingOverlay = document.getElementById('loading-overlay');
     const gameContainer = document.getElementById('game-container');
     const stagesContainer = document.getElementById('stages-container');
     const questionTextP = document.getElementById('question-text');
@@ -15,8 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const attributesContainer = document.getElementById('attributes-container');
     const summaryContainer = document.getElementById('summary-container');
     const gameWrapper = document.getElementById('game-wrapper');
+    const educationalContentDiv = document.getElementById('educational-content');
 
-    // --- SŁOWNIK KOLORÓW I NAZW ---
+    // ... reszta kodu (słowniki, fetchGameData, initGame, etc.) bez zmian ...
     const attributeMeta = {
         'zdrowie': { color: '#2ecc71', name: 'Zdrowie' },
         'oszczędności': { color: '#f1c40f', name: 'Oszczędności' },
@@ -27,13 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'majątek': { color: '#1abc9c', name: 'Majątek' },
         'doświadczenie zawodowe': { color: '#34495e', name: 'Doświadczenie' }
     };
-
-    // --- POBIERANIE DANYCH ---
     const fetchGameData = async () => {
-        if (loadingOverlay) loadingOverlay.style.display = 'flex';
-
         try {
-            // ZMIANA: Używamy wewnętrznego API Django
             const response = await fetch('/api/game-rules/');
 
             if (!response.ok) {
@@ -45,12 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Nie udało się pobrać danych gry:", error);
             if(gameContainer) gameContainer.innerHTML = `<p style="color: red; text-align: center;">Wystąpił błąd podczas ładowania reguł gry z API. <br><small>${error.message}</small></p>`;
-        } finally {
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
         }
     };
-
-    // --- INICJALIZACJA GRY ---
     const initGame = () => {
         gameState = {
             playerAttributes: {
@@ -73,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSidebar();
         displayCurrentQuestion();
     };
-
-    // --- BUDOWANIE ELEMENTÓW UI ---
     const buildStagesBar = () => {
         if (!stagesContainer) return;
         stagesContainer.innerHTML = '';
@@ -88,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
             stagesContainer.appendChild(stageElement);
         });
     };
-
     const updateSidebar = () => {
         if (!attributesContainer || !summaryContainer) return;
         attributesContainer.innerHTML = '';
@@ -105,17 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
             attributesContainer.appendChild(attrElement);
         }
 
-        const savings = gameState.playerAttributes['oszczędności'] * 100; // Przykładowy mnożnik
+        const savings = gameState.playerAttributes['oszczędności'] * 100;
         summaryContainer.innerHTML = `
             <div class="summary-item"><span>Dochód:</span> <span>${gameState.income} zł</span></div>
             <div class="summary-item"><span>Rodzaj umowy:</span> <span>${gameState.contractType}</span></div>
             <div class="summary-item"><span>Oszczędności:</span> <span>${savings.toFixed(2)} zł</span></div>`;
     };
-
-    // --- LOGIKA GRY ---
     const applyImpacts = (impacts) => {
         impacts.forEach(impact => {
-            // Upewnij się, że nazwa atrybutu jest pisana małymi literami
             const attr = impact.attribute.toLowerCase();
             if (gameState.playerAttributes.hasOwnProperty(attr)) {
                 let currentValue = gameState.playerAttributes[attr];
@@ -130,12 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         currentValue *= (1 + impact.value / 100);
                         break;
                 }
-                // Ogranicz wartość atrybutu do przedziału 0-100
                 gameState.playerAttributes[attr] = Math.max(0, Math.min(100, currentValue));
             }
         });
     };
-
     const checkConditions = (conditions) => {
         if (!conditions || conditions.length === 0) return true;
         return conditions.every(condition => {
@@ -165,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
 
-        // Pętla do pomijania pytań, które nie spełniają warunków
         while(currentQuestion && !checkConditions(currentQuestion.conditions)) {
             gameState.currentQuestionIndex++;
             currentQuestion = currentStage.questions[gameState.currentQuestionIndex];
@@ -182,6 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if(questionTextP) questionTextP.textContent = currentQuestion.text;
         if(answersContainer) answersContainer.innerHTML = '';
 
+        // ZAKTUALIZOWANA LOGIKA TRYBU EDUKACYJNEGO
+        // Sprawdzamy, czy tryb jest aktywny ORAZ czy dane pytanie POSIADA treść edukacyjną
+        if (isEducationalMode && currentQuestion.educational_content && educationalContentDiv) {
+            educationalContentDiv.innerHTML = `<p><strong>Wskazówka:</strong> ${currentQuestion.educational_content.content}</p>`;
+            educationalContentDiv.style.display = 'block';
+        } else if (educationalContentDiv) {
+            // Ukrywamy div, jeśli nie ma treści lub tryb jest wyłączony
+            educationalContentDiv.style.display = 'none';
+        }
+
         const imageBase = character === 'Kobieta' ? 'girl' : 'boy';
         const imageNumber = gameState.currentStageIndex + 1;
         if(characterImage) characterImage.src = `/mediafiles/${imageBase}${imageNumber}.png`;
@@ -194,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const isAvailable = checkConditions(answer.conditions);
             if (!isAvailable) {
                 card.disabled = true;
-                // Można dodać klasę CSS do stylizacji nieaktywnych odpowiedzi
                 card.style.opacity = "0.5";
                 card.style.cursor = "not-allowed";
             }
@@ -211,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- ZAKOŃCZENIE GRY ---
     const endGame = () => {
         const finalState = {
             attributes: gameState.playerAttributes,
@@ -246,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameInitDataEl) {
         character = gameInitDataEl.dataset.character;
         challenge = gameInitDataEl.dataset.challenge;
+        isEducationalMode = gameInitDataEl.dataset.isEducationalMode === 'true';
         fetchGameData();
     }
 });
