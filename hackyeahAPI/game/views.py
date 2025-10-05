@@ -67,7 +67,8 @@ def summary_view(request):
         left_keys = ['Zdrowie', 'Oszczędności', 'Spełnienie']
 
         income = final_data.get('income', 0)
-        savings = final_attributes.get('oszczędności', 0) * 1000 + final_attributes.get('majątek', 0) * 500
+        retirementSavings = final_data.get('retirementSavings', 0)
+        savings = (income * (1 - 0.1371) * (1 - retirementSavings)) * 12 * 45 * .15
 
         context = {
             'character': request.session.get('character'),
@@ -81,7 +82,7 @@ def summary_view(request):
                 'contractType': contractType,
                 'after_costs_value': (final_attributes.get('spełnienie', 0) + final_attributes.get('zdrowie', 0)) / 2,
                 'savings': f"{savings:,.2f}".replace(',', ' ').replace('.', ','),
-                'savings_value': final_attributes.get('oszczędności', 0)
+                'savings_value': max((savings / 10000), 100),
             },
             'challenge_result': challenge_result
         }
