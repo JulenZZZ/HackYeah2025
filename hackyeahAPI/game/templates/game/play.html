@@ -13,12 +13,12 @@
 <body>
 
     <div id="game-init-data" data-character="{{ character }}" data-challenge="{{ challenge }}" style="display: none;"></div>
+    <div id="csrf-token-container" style="display: none;">{% csrf_token %}</div>
 
     <div id="game-container">
         <header id="life-stages-bar">
             <h2>ROZDZIAŁY ŻYCIA</h2>
-            <div id="stages-container">
-                </div>
+            <div id="stages-container"></div>
         </header>
 
         <main id="game-wrapper">
@@ -28,40 +28,15 @@
                 </div>
                 <div id="event-container">
                     <p id="question-text"></p>
-                    <div id="answers-container">
-                        </div>
+                    <div id="answers-container"></div>
                 </div>
             </section>
 
             <aside id="sidebar">
-                <div id="attributes-container">
-                    </div>
-                <div id="summary-container">
-                    </div>
+                <div id="attributes-container"></div>
+                <div id="summary-container"></div>
             </aside>
         </main>
-
-        <div id="end-screen" class="hidden">
-            <h2 class="end-title">PODSUMOWANIE</h2>
-            <div id="end-stages-bar">
-                </div>
-            <div class="end-main-content">
-                <div class="end-attributes-panel" id="end-attributes-left">
-                    </div>
-                <div class="end-center-image">
-                     <img src="{% static 'images/family_final.png' %}" alt="Podsumowanie życia">
-                </div>
-                <div class="end-attributes-panel" id="end-attributes-right">
-                    </div>
-            </div>
-            <div class="end-footer">
-                <div class="end-summary-box" id="end-summary-left">
-                    </div>
-                <div class="end-summary-box" id="end-summary-right">
-                    </div>
-            </div>
-             <a href="{% url 'landing_page' %}" id="restart-button">Zagraj Ponownie</a>
-        </div>
     </div>
 
     <script src="{% static 'script.js' %}"></script>
