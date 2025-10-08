@@ -104,6 +104,23 @@ body, html {
     font-weight: 600;
     box-sizing: border-box;
 }
+
+/* --- RESPONSIVE STYLES --- */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    .left-panel {
+        padding-bottom: 30px;
+    }
+    .title-card h1 {
+        font-size: 1.5em;
+    }
+    .btn-create {
+        padding: 15px 35px;
+        font-size: 1.2em;
+    }
+}
 .popup-overlay {
     display: flex;
     justify-content: center;
@@ -141,21 +158,4 @@ body, html {
 
 .popup-close:hover {
     color: #000;
-}
-
-/* --- RESPONSIVE STYLES --- */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-    }
-    .left-panel {
-        padding-bottom: 30px;
-    }
-    .title-card h1 {
-        font-size: 1.5em;
-    }
-    .btn-create {
-        padding: 15px 35px;
-        font-size: 1.2em;
-    }
 }

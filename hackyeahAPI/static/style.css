@@ -127,7 +127,6 @@ body.summary-body {
     margin-bottom: 20px;
     min-height: 50px;
 }
-
 #answers-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -182,22 +181,18 @@ body.summary-body {
     padding-right: 15px;
     gap: 10px;
 }
-
-/********** ZMIANA DLA SKALOWANIA PASKÓW POSTĘPU **********/
 .attribute-name {
     font-weight: 600;
     flex: 0 0 45%; /* Etykieta zawsze zajmuje 45% szerokości kontenera .attribute */
     flex-shrink: 0;
 }
 .progress-bar-container {
-    flex-grow: 1; /* Pasek postępu wypełnia resztę miejsca */
+    flex-grow: 1;
     height: 20px;
     background-color: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
 }
-/************************************************************/
-
 .progress-bar {
     height: 100%;
     border-radius: 10px;
@@ -319,6 +314,8 @@ body.summary-body {
     margin-bottom: 20px;
     border: 2px solid #f39c12;
 }
+
+/* NOWE STYLE DLA WYNIKU WYZWANIA */
 .challenge-result-success {
     background-color: #2ecc71;
     color: white;
